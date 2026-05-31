@@ -1,0 +1,44 @@
+[
+    {
+        "id": 0,
+        "name": "شنبه",
+        "planfilename": "sat",
+        "type": "workday"
+    },
+    {
+        "id": 1,
+        "name": "یکشنبه",
+        "planfilename": "sun",
+        "type": "workday"
+    },
+    {
+        "id": 2,
+        "name": "دوشنبه",
+        "planfilename": "mon",
+        "type": "recovery"
+    },
+    {
+        "id": 3,
+        "name": "سه شنبه",
+        "planfilename": "tue",
+        "type": "workday"
+    },
+    {
+        "id": 4,
+        "name": "چهارشنبه",
+        "planfilename": "wed",
+        "type": "recovery"
+    },
+    {
+        "id": 5,
+        "name": "پنجشنبه",
+        "planfilename": "thu",
+        "type": "workday"
+    },
+    {
+        "id": 6,
+        "name": "جمعه",
+        "planfilename": "fri",
+        "type": "recovery"
+    }
+]

@@ -5,7 +5,7 @@ import { store } from "../redux/store";
 export default function Layout() {
   return (
     <Provider store={store}>
-      <Slot />
+      <Slot/>
     </Provider>
   );
 }
