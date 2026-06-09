@@ -37,7 +37,7 @@ export default function HomePage() {
     {
       id: 1,
       name: 'sleep',
-      icon: require('@/assets/icons/diet.png'),
+      icon: require('@/assets/icons/sleeping.png'),
       url: '/sleeping',
     },
     {
@@ -86,7 +86,7 @@ export default function HomePage() {
       <View style={styles.welcomeContainer}>
         <View style={styles.logoSection}>
           <Image
-            source={require('@/assets/icons/logo.jpeg')}
+            source={require('@/assets/icons/logo.png')}
             style={styles.logo}
             resizeMode="contain"
           />

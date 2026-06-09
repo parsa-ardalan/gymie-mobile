@@ -10,6 +10,7 @@ export default StyleSheet.create({
     header: {
         height: "16%",
         flexDirection: "row",
+        gap: 10,
     },
 
     headerSide: {
@@ -52,13 +53,14 @@ export default StyleSheet.create({
     },
 
     headerTitle: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: "bold",
         color: "#fff",
     },
 
     headerStatus: {
-        fontSize: 14,
+        fontSize: 12,
+        marginTop: 3,
         color: "#a855f7",
     },
 
@@ -74,7 +76,8 @@ export default StyleSheet.create({
     },
 
     backText: {
-        fontSize: 20,
+        width: 20,
+        height: 20,
         color: "#fff",
     },
 
@@ -113,39 +116,45 @@ export default StyleSheet.create({
     },
 
     inputContainer: {
-        height: "16%",
+        height: 80,
         flexDirection: "row",
-        paddingHorizontal: 16,
         alignItems: "center",
+        gap: 10,
+        paddingHorizontal: 12,
+        paddingBottom: 10,
     },
 
     inputWrapper: {
-        flex: 4,
+        flex: 1,
     },
 
     input: {
-        height: 56,
+        writingDirection: "rtl",
+        height: 50,
         borderWidth: 1,
         borderColor: "#a855f7",
-        borderRadius: 999,
-        paddingHorizontal: 20,
+        borderRadius: 25,
+        paddingHorizontal: 16,
         color: "#fff",
         fontSize: 14,
-        textAlign: "right",
+        backgroundColor: "rgba(255,255,255,0.03)",
+        outlineWidth: 0
     },
 
     sendBtn: {
-        flex: 1,
-        height: 48,
-        borderRadius: 24,
+        width: 50,
+        height: 50,
+        borderRadius: 25,
         backgroundColor: "rgba(168,85,247,0.1)",
         alignItems: "center",
         justifyContent: "center",
-        marginRight: 25,
+        marginLeft: 10,
     },
 
     sendText: {
         color: "#fff",
-        fontSize: 16,
+        width: 20,
+        height: 20,
+        fontWeight: "bold",
     },
 });

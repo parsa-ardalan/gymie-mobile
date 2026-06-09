@@ -3,3 +3,11 @@ body {
     background-color: black;
     padding: 0px 32px;
 }
+
+input { 
+    outline: none;
+}
+
+input:focus { 
+    outline: none;
+}

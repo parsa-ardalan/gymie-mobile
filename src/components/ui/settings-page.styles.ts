@@ -129,9 +129,9 @@ export default StyleSheet.create({
   },
 
   iconLarge: {
-    width: 35,
-    height: 35,
-    tintColor: "#fff",
+    width: 25,
+    height: 25,
+    color: "#fff",
   },
 
   rowText: {

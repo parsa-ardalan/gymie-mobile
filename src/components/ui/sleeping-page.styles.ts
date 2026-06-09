@@ -8,6 +8,43 @@ export default StyleSheet.create({
     },
 
     /* CARD */
+    badge: {
+        alignSelf: "flex-start",
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 999,
+        backgroundColor: "rgba(59,130,246,0.08)",
+        marginBottom: 10,
+    },
+
+    badgeText: {
+        color: "#3b82f6",
+        fontSize: 11,
+        fontWeight: "600",
+    },
+
+    divider: {
+        height: 1,
+        backgroundColor: "rgba(255,255,255,0.06)",
+        marginVertical: 12,
+    },
+
+    subLabel: {
+        color: "rgba(255,255,255,0.35)",
+        fontSize: 12,
+        marginTop: 5,
+    },
+
+    valueBox: {
+        alignItems: "center",
+        justifyContent: "center"
+    },
+
+    unit: {
+        color: "rgba(255,255,255,0.4)",
+        fontSize: 12,
+        marginTop: 2,
+    },
     card: {
         padding: 16,
         borderRadius: 16,
@@ -54,7 +91,7 @@ export default StyleSheet.create({
 
     value: {
         color: "#fff",
-        fontSize: 14,
+        fontSize: 16,
     },
 
     /* INPUTS */
@@ -67,23 +104,47 @@ export default StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: 14,
+
+        padding: 16,
+        borderRadius: 18,
+
+        borderWidth: 1,
+        borderColor: "rgba(59,130,246,0.2)",
+
+        shadowColor: "#000",
+        shadowOpacity: 0.3,
+        shadowRadius: 12,
+        elevation: 6,
+    },
+
+    timeInputWrapper: {
+        width: 90,
+        height: 44,
         borderRadius: 12,
-        backgroundColor: "#111",
+
+        backgroundColor: "rgba(59,130,246,0.08)",
+        borderWidth: 1,
+        borderColor: "rgba(59,130,246,0.25)",
+
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    timeInput: {
+        width: "100%",
+        height: "100%",
+
+        color: "#fff",
+        fontSize: 18,
+        fontWeight: "700",
+
+        textAlign: "center",
+        letterSpacing: 2,
     },
 
     inputLabel: {
-        color: "rgba(255,255,255,0.7)",
         fontSize: 13,
-        width: "85%"
-    },
-
-    input: {
-        flex: 1,
-        color: "#fff",
-        textAlign: "right",
-        fontSize: 16,
-        width: "15%"
+        color: "#fff"
     },
 
     /* CIRCLE (simplified UI version) */
