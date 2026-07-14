@@ -148,7 +148,7 @@ export default function HomePage() {
           <View style={styles.activityCardContent}>
             <View style={styles.activityIconContainer}>
               <Image
-                source={require('@/assets/icons/profile.png')}
+                source={require('@/assets/icons/chat.png')}
                 style={styles.activityIcon}
                 resizeMode="contain"
               />

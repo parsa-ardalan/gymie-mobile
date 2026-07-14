@@ -5,8 +5,8 @@ export default StyleSheet.create({
     page: {
         flex: 1,
         backgroundColor: "#000",
-        paddingTop: "25%",
         alignItems: "center",
+        justifyContent: "center"
     },
 
     card: {
@@ -133,15 +133,14 @@ export default StyleSheet.create({
 
     button: {
         flex: 1,
-        borderWidth: 1,
-        borderColor: "#3b82f6",
+        backgroundColor: "rgba(59,130,246,0.1)",
         borderRadius: 12,
         justifyContent: "center",
         alignItems: "center",
     },
 
     buttonText: {
-        color: "#3b82f6",
+        color: "#fff",
         fontSize: 15,
     },
 });

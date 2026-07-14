@@ -18,6 +18,7 @@ type WeekdayItem = {
     name: string;
     type: string;
     planfilename: string;
+    activityPercent: number; // مهم: number
 };
 
 type RootState = {
@@ -60,24 +61,9 @@ export default function Plan() {
     }, [recovery.subtitle]);
 
     const icons: RecoveryIconItem[] = [
-        {
-            id: 0,
-            name: 'profile',
-            image: require('@/assets/icons/profile.png'),
-            link: '/profile',
-        },
-        {
-            id: 1,
-            name: 'diet',
-            image: require('@/assets/icons/diet.png'),
-            link: '/diet',
-        },
-        {
-            id: 2,
-            name: 'blogs',
-            image: require('@/assets/icons/blogs.png'),
-            link: '/blogs',
-        },
+        { id: 0, name: 'profile', image: require('@/assets/icons/profile.png'), link: '/profile' },
+        { id: 1, name: 'diet', image: require('@/assets/icons/diet.png'), link: '/diet' },
+        { id: 2, name: 'blogs', image: require('@/assets/icons/blogs.png'), link: '/blogs' },
     ];
 
     if (!weekday) {
@@ -97,22 +83,14 @@ export default function Plan() {
     const jsonFile: MovementItem[] = useMemo(() => {
         try {
             switch (dayData.dataname) {
-                case 'sat':
-                    return require('@/data/workout/dayPlans/sat.json');
-                case 'sun':
-                    return require('@/data/workout/dayPlans/sun.json');
-                case 'mon':
-                    return require('@/data/workout/dayPlans/mon.json');
-                case 'tue':
-                    return require('@/data/workout/dayPlans/tue.json');
-                case 'wed':
-                    return require('@/data/workout/dayPlans/wed.json');
-                case 'thu':
-                    return require('@/data/workout/dayPlans/thu.json');
-                case 'fri':
-                    return require('@/data/workout/dayPlans/fri.json');
-                default:
-                    return [];
+                case 'sat': return require('@/data/workout/dayPlans/sat.json');
+                case 'sun': return require('@/data/workout/dayPlans/sun.json');
+                case 'mon': return require('@/data/workout/dayPlans/mon.json');
+                case 'tue': return require('@/data/workout/dayPlans/tue.json');
+                case 'wed': return require('@/data/workout/dayPlans/wed.json');
+                case 'thu': return require('@/data/workout/dayPlans/thu.json');
+                case 'fri': return require('@/data/workout/dayPlans/fri.json');
+                default: return [];
             }
         } catch (error) {
             console.log('Error loading JSON file:', error);
@@ -127,10 +105,11 @@ export default function Plan() {
         setMovesDone(jsonFile.map(() => false));
         setPercentShow(0);
 
+        // FIX: number به جای string
         dispatch(
             updateWeekDayPercent({
                 dayname: dayData.name,
-                dayPercent: '0',
+                dayPercent: 0,
             })
         );
     }, [jsonFile, dayData.name, dispatch]);
@@ -139,9 +118,7 @@ export default function Plan() {
     const movementPercent = movementQuantity > 0 ? 100 / movementQuantity : 0;
 
     const handleMoveDone = (index: number) => {
-        if (movesDone[index]) {
-            return;
-        }
+        if (movesDone[index]) return;
 
         const newMovesDone = [...movesDone];
         newMovesDone[index] = true;
@@ -152,26 +129,26 @@ export default function Plan() {
         setMovesDone(newMovesDone);
         setPercentShow(newPercent);
 
+        // FIX: number ذخیره میشه (نه string)
         dispatch(
             updateWeekDayPercent({
                 dayname: dayData.name,
-                dayPercent: newPercent.toFixed(0),
+                dayPercent: Math.round(newPercent),
             })
         );
     };
 
     return (
-        <ScrollView
-            contentContainerStyle={styles.container}
-            showsVerticalScrollIndicator={false}
-        >
+        <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
             <View style={styles.page}>
+
                 {dayData.type === 'workday' ? (
                     <View style={styles.workSection}>
+
                         <View style={styles.percentBox}>
                             <View style={styles.percentNumberWrapper}>
                                 <Text style={styles.percentNumberText}>
-                                    {percentShow.toFixed(0)}%
+                                    {Math.round(percentShow)}%
                                 </Text>
                             </View>
 
@@ -272,6 +249,7 @@ export default function Plan() {
                         </View>
                     </View>
                 )}
+
             </View>
         </ScrollView>
     );

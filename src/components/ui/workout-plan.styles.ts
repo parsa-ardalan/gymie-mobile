@@ -22,7 +22,7 @@ export const workoutPlanStyles = StyleSheet.create({
         width: '100%',
         height: 64,
         flexDirection: 'row',
-        writingDirection: "ltr"
+        writingDirection: "ltr",
     },
 
     percentNumberWrapper: {

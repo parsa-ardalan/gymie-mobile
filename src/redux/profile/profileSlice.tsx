@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 export type ProfileState = {
     name: string;
@@ -11,37 +11,31 @@ export type ProfileState = {
 };
 
 const initialState: ProfileState = {
-    name: "پارسا اردلان",
-    bio: "بدنسازی، کیک بوکسینگ رو دوست دارم. تمرین کردن صبح ها یه حس دیگه ای داره",
-    height: 175,
-    weight: 57,
-    age: 19,
-    dayStreak: 31,
+    name: "",
+    bio: "",
+    height: 0,
+    weight: 0,
+    age: 0,
+    dayStreak: 0,
     loggedIn: false,
 };
 
 const userSlice = createSlice({
-
     name: "user",
-
     initialState,
 
     reducers: {
 
-        add: (state, action) => {
-
-        },
-
         updateProfile: (state, action) => {
-
+            Object.assign(state, action.payload);
         },
 
         logout: (state) => {
             state.loggedIn = false;
+            console.log(state.loggedIn)
         },
     },
 });
 
-export const { add, updateProfile, logout } = userSlice.actions;
-
+export const { updateProfile, logout } = userSlice.actions;
 export default userSlice.reducer;

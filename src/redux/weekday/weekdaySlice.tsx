@@ -1,7 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-
-
+import { createSlice } from "@reduxjs/toolkit";
 
 const weekdaySlice = createSlice({
 
@@ -13,49 +10,49 @@ const weekdaySlice = createSlice({
             name: "شنبه",
             planfilename: "sat",
             type: "workday",
-            activityPercent: 1
+            activityPercent: 0.1
         },
         {
             id: 1,
             name: "یکشنبه",
             planfilename: "sun",
             type: "workday",
-            activityPercent: 1
+            activityPercent: 0.1
         },
         {
             id: 2,
             name: "دوشنبه",
             planfilename: "mon",
             type: "recovery",
-            activityPercent: 1
+            activityPercent: 0.1
         },
         {
             id: 3,
             name: "سه شنبه",
             planfilename: "tue",
             type: "workday",
-            activityPercent: 1
+            activityPercent: 0.1
         },
         {
             id: 4,
             name: "چهارشنبه",
             planfilename: "wed",
             type: "recovery",
-            activityPercent: 1
+            activityPercent: 0.1
         },
         {
             id: 5,
             name: "پنجشنبه",
             planfilename: "thu",
             type: "workday",
-            activityPercent: 1
+            activityPercent: 0.1
         },
         {
             id: 6,
             name: "جمعه",
             planfilename: "fri",
             type: "recovery",
-            activityPercent: 1
+            activityPercent: 0.1
         }
     ],
 

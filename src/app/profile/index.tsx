@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import styles from "@/components/ui/profile-page.styles";
 
 export default function Profile() {
+
     const profile = useSelector((state: any) => state.user);
     const router = useRouter();
 
@@ -47,10 +48,14 @@ export default function Profile() {
                         <Text style={styles.label}>قد</Text>
                     </View>
 
-                    <View style={styles.boxPurple}>
+                    <TouchableOpacity
+                        style={styles.boxPurple}
+                        onPress={() => router.push("/profile/account")}
+
+                    >
                         <Text style={styles.numberPurple}>--</Text>
                         <Text style={styles.label}>حساب کاربری</Text>
-                    </View>
+                    </TouchableOpacity>
 
                     <View style={styles.boxOrange}>
                         <Text style={styles.numberOrange}>
@@ -75,6 +80,6 @@ export default function Profile() {
 
             </View>
 
-        </View>
+        </View >
     );
 }
