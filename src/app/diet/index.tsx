@@ -5,9 +5,9 @@ import { FlatList, Image, Pressable, ScrollView, Text, View } from 'react-native
 import breakfast from '@/data/diet/breakfast.json';
 import dinner from '@/data/diet/dinner.json';
 import lunch from '@/data/diet/lunch.json';
-import profile from '@/data/profile/profile.json';
 
 import { dietPageStyles as styles } from '@/components/ui/diet-page.styles';
+import { useSelector } from 'react-redux';
 
 type MealItem = {
   id?: string | number;
@@ -16,6 +16,9 @@ type MealItem = {
 };
 
 export default function Diet() {
+
+  const profile = useSelector((state: any) => state.user)
+
   const router = useRouter();
 
   const calories = useMemo(() => {

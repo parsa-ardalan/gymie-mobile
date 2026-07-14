@@ -4,7 +4,6 @@ import Svg, { Circle } from "react-native-svg";
 import { useDispatch, useSelector } from "react-redux";
 
 import styles from "@/components/ui/sleeping-page.styles";
-import profile from "@/data/profile/profile.json";
 import {
     changeBedTime,
     changeWakeTime,
@@ -15,6 +14,8 @@ import {
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 export default function Sleeping() {
+
+    const profile = useSelector((state: any) => state.user)
 
     const dispatch = useDispatch();
     const sleepingInfo = useSelector((state: any) => state.sleeping);

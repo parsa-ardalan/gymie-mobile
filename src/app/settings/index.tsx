@@ -1,20 +1,13 @@
 import { useEffect, useState } from "react";
 import {
-    Image,
     Text,
-    TextInput,
     TouchableOpacity,
-    View,
+    View
 } from "react-native";
 
 import styles from "@/components/ui/settings-page.styles";
-import profile from "@/data/profile/profile.json";
 
 export default function Settings() {
-    const [isEditable, setIsEditable] = useState(false);
-
-    const [name, setName] = useState(profile.name);
-    const [bio, setBio] = useState(profile.bio);
 
     const [notificationStatus, setNotificationStatus] = useState("درخواست اجازه");
 
@@ -25,59 +18,6 @@ export default function Settings() {
 
     return (
         <View style={styles.page}>
-
-            {/* profile */}
-            {!isEditable ? (
-                <View style={styles.profileBox}>
-
-                    <Text style={styles.name}>{name}</Text>
-
-                    <Text style={styles.bio}>{bio}</Text>
-
-                    <View style={styles.editRow}>
-                        <TouchableOpacity onPress={() => setIsEditable(true)}>
-                            <Image
-                                source={require("@/assets/icons/edit.png")}
-                                style={styles.icon}
-                            />
-                        </TouchableOpacity>
-                    </View>
-
-                </View>
-            ) : (
-                <View style={styles.editContainer}>
-
-                    <View style={styles.fieldset}>
-                        <Text style={styles.legend}>نام کاربری</Text>
-                        <TextInput
-                            value={name}
-                            onChangeText={setName}
-                            style={styles.input}
-                            placeholder="نام"
-                            placeholderTextColor="#aaa"
-                        />
-                    </View>
-
-                    <View style={styles.fieldset}>
-                        <Text style={styles.legend}>بیوگرافی شخصی</Text>
-                        <TextInput
-                            value={bio}
-                            onChangeText={setBio}
-                            style={styles.input}
-                            placeholder="بیو"
-                            placeholderTextColor="#aaa"
-                        />
-                    </View>
-
-                    <TouchableOpacity
-                        style={styles.submitBtn}
-                        onPress={() => setIsEditable(false)}
-                    >
-                        <Text style={styles.submitText}>تایید</Text>
-                    </TouchableOpacity>
-
-                </View>
-            )}
 
             {/* language */}
             <View style={styles.rowBox}>
