@@ -13,8 +13,11 @@ export default function AuthGuard({ children }: Props) {
     const loggedIn = useSelector((state: any) => state.user.loggedIn);
 
     useEffect(() => {
-        if (!loggedIn && pathname !== "/auth") {
-            router.replace("/auth");
+        // فقط signup مجازه وقتی لاگین نیست
+        const allowedPublicRoute = "/auth/signup";
+
+        if (!loggedIn && pathname !== allowedPublicRoute) {
+            router.replace("/auth/login");
         }
     }, [loggedIn, pathname]);
 

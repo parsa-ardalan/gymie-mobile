@@ -9,11 +9,17 @@ import {
 
 import styles from "@/components/ui/account-page.styles";
 import { logout, updateProfile } from "@/redux/profile/profileSlice";
+import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Account() {
 
     const profile = useSelector((state: any) => state.user);
+
+    if (!profile?._id) {
+        console.log("User id not found", profile);
+    }
+
     const dispatch = useDispatch();
 
     const [isEditable, setIsEditable] = useState(false);
@@ -27,17 +33,34 @@ export default function Account() {
     const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
     const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-    const handleUpdateProfile = () => {
+    const handleUpdateProfile = async () => {
 
-        dispatch(updateProfile({
-            name,
-            bio,
-            age: Number(age),
-            height: Number(height),
-            weight: Number(weight),
-        }));
+        try {
 
-        setIsEditable(false);
+            const response = await axios.put(
+                `http://localhost:3000/users/${profile._id}`,
+                {
+                    name,
+                    bio,
+                    age: Number(age),
+                    height: Number(height),
+                    weight: Number(weight),
+                }
+            );
+
+            dispatch(updateProfile(response.data));
+
+            setIsEditable(false);
+
+
+        } catch (error) {
+
+            console.log(
+                "Update profile failed:",
+                error
+            );
+        }
+
     };
 
     const handleLogout = () => {
@@ -45,15 +68,19 @@ export default function Account() {
         setShowLogoutModal(false);
     };
 
+    console.log("PROFILE:", profile);
+
     return (
+
         <View style={styles.page}>
-            
+
             {!isEditable ? (
                 <View style={styles.profileBox}>
                     <Text style={styles.name}>{profile.name}</Text>
                     <Text style={styles.bio}>{profile.bio}</Text>
                 </View>
             ) : (
+
                 <View style={styles.editContainer}>
                     <View style={styles.fieldset}>
                         <Text style={styles.legend}>نام کاربری</Text>
@@ -127,6 +154,9 @@ export default function Account() {
                     </View>
                 </View>
             </TouchableOpacity>
+            
+
+            {/*  ------------------modals ----------------- */}
 
             {/* Subscription Modal */}
             <Modal visible={showSubscriptionModal} transparent animationType="fade">

@@ -17,6 +17,13 @@ export class UsersController {
         return this.usersService.findAll();
     }
 
+    @Get('phone/:phoneNumber')
+    getUserByPhone(
+        @Param('phoneNumber') phoneNumber: string
+    ) {
+        return this.usersService.findByPhone(phoneNumber);
+    }
+
     @Put(':id')
     updateUser(@Param('id') id: string, @Body() body: any) {
         return this.usersService.update(id, body);
