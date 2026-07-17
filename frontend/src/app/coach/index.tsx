@@ -11,6 +11,8 @@ import {
     View,
 } from "react-native";
 
+import Svg, { Path } from "react-native-svg";
+
 import styles from "@/components/ui/coach-page.styles";
 import botanswers from "@/data/chat/botanswers.json";
 
@@ -25,26 +27,34 @@ export default function Coach() {
     ]);
 
     const [input, setInput] = useState("");
-
     const flatListRef = useRef(null);
 
     useEffect(() => {
         flatListRef.current?.scrollToEnd({ animated: true });
     }, [messages]);
 
-    const sendMessage = () => {
-        const rand = Math.floor(Math.random() * botanswers.length);
+    // ✅ FIX: back handler
+    const handleBack = () => {
+        if (router.canGoBack()) {
+            router.back();
+        } else {
+            router.replace("/"); // fallback
+        }
+    };
 
+    const sendMessage = () => {
         if (!input.trim()) return;
 
         const newUserMessage = {
             id: Date.now(),
             sender: "user",
-            content: input,
+            content: input.trim(),
         };
 
         setMessages((prev) => [...prev, newUserMessage]);
         setInput("");
+
+        const rand = Math.floor(Math.random() * botanswers.length);
 
         setTimeout(() => {
             const botReply = {
@@ -54,7 +64,21 @@ export default function Coach() {
             };
 
             setMessages((prev) => [...prev, botReply]);
-        }, 800);
+        }, 700);
+    };
+
+    const renderItem = ({ item }) => {
+        const isUser = item.sender === "user";
+
+        return (
+            <View
+                style={isUser ? styles.userMessage : styles.botMessage}
+            >
+                <Text style={isUser ? styles.userText : styles.botText}>
+                    {item.content}
+                </Text>
+            </View>
+        );
     };
 
     return (
@@ -81,11 +105,16 @@ export default function Coach() {
                 </View>
 
                 <View style={styles.headerSide}>
-                    <Pressable style={styles.backBtn} onPress={() => router.back()}>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={styles.backText}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                        </svg>
-
+                    <Pressable style={styles.backBtn} onPress={handleBack}>
+                        <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+                            <Path
+                                d="M15.75 19.5 8.25 12l7.5-7.5"
+                                stroke="white"
+                                strokeWidth={1.5}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
+                        </Svg>
                     </Pressable>
                 </View>
             </View>
@@ -96,17 +125,8 @@ export default function Coach() {
                 data={messages}
                 keyExtractor={(item) => item.id.toString()}
                 contentContainerStyle={styles.chatContainer}
-                renderItem={({ item }) =>
-                    item.sender === "user" ? (
-                        <View style={styles.userMessage}>
-                            <Text style={styles.userText}>{item.content}</Text>
-                        </View>
-                    ) : (
-                        <View style={styles.botMessage}>
-                            <Text style={styles.botText}>{item.content}</Text>
-                        </View>
-                    )
-                }
+                renderItem={renderItem}
+                showsVerticalScrollIndicator={false}
             />
 
             {/* INPUT */}
@@ -119,16 +139,20 @@ export default function Coach() {
                         placeholderTextColor="#888"
                         style={styles.input}
                         onSubmitEditing={sendMessage}
+                        returnKeyType="send"
                     />
                 </View>
 
                 <Pressable style={styles.sendBtn} onPress={sendMessage}>
-                    <Text style={styles.sendText}>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={styles.sendText}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
-                        </svg>
-
-                    </Text>
+                    <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
+                        <Path
+                            d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                            stroke="white"
+                            strokeWidth={1.5}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
+                    </Svg>
                 </Pressable>
             </View>
         </KeyboardAvoidingView>
