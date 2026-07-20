@@ -80,11 +80,8 @@ WorkoutSchema.index(
 )
 
 WorkoutSchema.set('toJSON', {
-    transform: (_, ret) => {
-        const { _id, __v, ...rest } = ret
-        return {
-            id: _id,
-            ...rest,
-        }
+    transform: (_, ret: any) => {
+        delete ret.__v
+        return ret
     },
 })

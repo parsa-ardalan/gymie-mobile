@@ -5,6 +5,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Workout } from '../workouts/workout.schema';
 
+import { DietService } from '../diet/diet.service'; // ✅ اضافه شد
+
 @Injectable()
 export class AuthService {
 
@@ -15,6 +17,8 @@ export class AuthService {
 
         @InjectModel(Workout.name)
         private readonly workoutModel: Model<Workout>,
+
+        private readonly dietService: DietService, // ✅ اضافه شد
     ) { }
 
     // LOGIN CHECK + OTP
@@ -74,7 +78,7 @@ export class AuthService {
     private async createWorkoutForUser(user: any) {
 
         const workoutId = 'w' + user._id.toString().replace('u', '');
-        
+
         await this.workoutModel.create({
             _id: workoutId,
             user_id: user._id,
@@ -109,12 +113,17 @@ export class AuthService {
             };
         }
 
-        // ساخت یوزر
+        // ✅ ساخت یوزر
         const user = await this.usersService.create(saved.userData);
 
-        // 🔥 ساخت workout مرتبط
+        // 🔥 ساخت workout
         await this.createWorkoutForUser(user);
 
+        // 🔥🔥 ساخت diet (اضافه شد)
+        await this.dietService.createForUser(
+            user._id.toString(),
+            user.diet_id
+        );
         this.signupOtps.delete(data.phoneNumber);
 
         return {

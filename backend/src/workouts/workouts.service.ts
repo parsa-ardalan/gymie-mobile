@@ -10,21 +10,16 @@ export class WorkoutsService {
     constructor(
         @InjectModel(Workout.name)
         private readonly workoutModel: Model<WorkoutDocument>,
-    ) {}
+    ) { }
 
 
     async getAllWorkouts() {
-
         const workouts = await this.workoutModel
             .find()
             .lean()
 
-
-        return workouts.map(workout => ({
-            ...workout,
-            id: workout._id,
-        }))
-    }
+        return workouts
+    }   
 
     async getWorkoutById(id: string) {
 
@@ -42,10 +37,7 @@ export class WorkoutsService {
         }
 
 
-        return {
-            ...workout,
-            id: workout._id,
-        }
+        return workout
     }
 
 
@@ -61,24 +53,23 @@ export class WorkoutsService {
     ) {
 
 
-        const workout =
-            await this.workoutModel.findOneAndUpdate(
-                {
-                    _id: workoutId,
-                    'days.dayOfWeek': dayOfWeek,
-                },
-                {
-                    $push: {
-                        'days.$.exercises': {
-                            ...exercise,
-                            isDone: false,
-                        },
+        const workout = await this.workoutModel.findOneAndUpdate(
+            {
+                _id: workoutId,
+                'days.dayOfWeek': dayOfWeek,
+            },
+            {
+                $push: {
+                    'days.$.exercises': {
+                        ...exercise,
+                        isDone: false,
                     },
                 },
-                {
-                    returnDocument: 'after'
-                }
-            )
+            },
+            {
+                returnDocument: 'after'
+            }
+        )
 
 
         if (!workout) {
@@ -92,9 +83,6 @@ export class WorkoutsService {
     }
 
 
-
-
-
     async toggleExercise(
         workoutId: string,
         dayOfWeek: number,
@@ -102,28 +90,25 @@ export class WorkoutsService {
     ) {
 
 
-        const path =
-            `days.$.exercises.${exerciseIndex}.isDone`
+        const path = `days.$.exercises.${exerciseIndex}.isDone`
 
 
-
-        const workout =
-            await this.workoutModel.findOneAndUpdate(
-                {
-                    _id: workoutId,
-                    'days.dayOfWeek': dayOfWeek,
-                },
-                {
-                    $bit: {
-                        [path]: {
-                            xor: 1
-                        }
+        const workout = await this.workoutModel.findOneAndUpdate(
+            {
+                _id: workoutId,
+                'days.dayOfWeek': dayOfWeek,
+            },
+            {
+                $bit: {
+                    [path]: {
+                        xor: 1
                     }
-                },
-                {
-                    returnDocument: 'after'
                 }
-            )
+            },
+            {
+                returnDocument: 'after'
+            }
+        )
 
 
         if (!workout) {

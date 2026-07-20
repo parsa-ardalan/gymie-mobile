@@ -22,7 +22,6 @@ export class AuthController {
     }
 
 
-
     @Post('signup/send-otp')
     signupSendOtp(
         @Body() body: any
@@ -31,7 +30,6 @@ export class AuthController {
         return this.authService.signupSendOtp(body);
 
     }
-
 
 
     @Post('signup/verify-otp')
