@@ -154,7 +154,6 @@ export default function Account() {
                     </View>
                 </View>
             </TouchableOpacity>
-            
 
             {/*  ------------------modals ----------------- */}
 

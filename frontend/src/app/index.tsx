@@ -79,6 +79,7 @@ export default function HomePage() {
   };
 
   return (
+
     <ScrollView
       contentContainerStyle={styles.page}
       showsVerticalScrollIndicator={false}
@@ -162,6 +163,7 @@ export default function HomePage() {
           </View>
         </Pressable>
       </View>
+
     </ScrollView>
   );
 }

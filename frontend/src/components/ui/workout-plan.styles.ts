@@ -1,70 +1,56 @@
 import { StyleSheet } from 'react-native';
 
 export const workoutPlanStyles = StyleSheet.create({
+
     container: {
         flexGrow: 1,
-        paddingBottom: 24,
-        backgroundColor: '#000000',
+        backgroundColor: '#050505',
     },
 
     page: {
-        width: '100%',
-        minHeight: '100%',
-        backgroundColor: '#000000',
-        paddingTop: 32
+        flex: 1,
+        paddingTop: 24,
+        paddingBottom: 24
     },
 
     workSection: {
-        width: '100%',
+        gap: 18,
     },
 
+    // 🔥 Progress
     percentBox: {
-        width: '100%',
-        height: 64,
         flexDirection: 'row',
-        writingDirection: "ltr",
-    },
-
-    percentNumberWrapper: {
-        width: '20%',
-        height: '100%',
         alignItems: 'center',
-        justifyContent: 'center',
+        gap: 12,
+        paddingVertical: 10,
     },
 
     percentNumberText: {
-        fontSize: 18,
-        color: '#ffffff',
-    },
-
-    percentBarWrapper: {
-        width: '75%',
-        height: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
+        fontSize: 16,
+        fontWeight: '100',
+        color: 'white',
+        width: 50,
     },
 
     percentBarBackground: {
-        width: '100%',
-        height: 12,
-        borderRadius: 12,
+        flex: 1,
+        height: 10,
+        borderRadius: 8,
+        backgroundColor: 'rgba(255,255,255,0.06)',
         overflow: 'hidden',
-        backgroundColor: 'rgba(255,255,255,0.1)',
     },
 
     percentBarFill: {
         height: '100%',
-        borderRadius: 12,
-        backgroundColor: '#22c55e',
-        transitionDuration: 500,
+        borderRadius: 8,
+        backgroundColor: '#09ff00ff',
     },
 
+    // 🧊 Card (Glass Style)
     movementCard: {
-        width: '100%',
-        marginTop: 20,
-        padding: 20,
-        borderRadius: 12,
-        backgroundColor: 'transparent',
+        borderRadius: 14,
+        padding: 14,
+        marginTop: 24,
 
         shadowColor: '#ffffff',
         shadowOffset: {
@@ -72,120 +58,131 @@ export const workoutPlanStyles = StyleSheet.create({
             height: 1,
         },
         shadowOpacity: 0.25,
-        shadowRadius: 3,
-        elevation: 3,
+        shadowRadius: 2,
+        elevation: 2,
     },
 
     movementCardDone: {
-        width: '100%',
-        marginTop: 20,
-        padding: 20,
-        borderRadius: 12,
-        backgroundColor: 'transparent',
-
-        shadowColor: '#0e3d03ff',
+        shadowColor: '#09ff00ff',
         shadowOffset: {
-            width: 2,
-            height: 2,
+            width: 0,
+            height: 1,
         },
-        shadowOpacity: 0.90,
-        shadowRadius: 3,
-        elevation: 3,
-    },
-
-    movementNameWrapper: {
-        width: '100%',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
+        shadowOpacity: 0.25,
+        shadowRadius: 2,
+        elevation: 2,
     },
 
     movementName: {
         fontSize: 16,
-        color: '#ffffff',
+        fontWeight: '700',
+        color: '#fff',
     },
 
     setRow: {
-        width: '100%',
-        height: 48,
-        marginTop: 20,
+        marginTop: 24,
         flexDirection: 'row',
-    },
-
-    setCountWrapper: {
-        width: '20%',
-        height: '100%',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
 
     setCountText: {
-        fontSize: 14,
-        color: '#ffffff',
+        fontSize: 13,
+        color: 'rgba(255,255,255,0.5)',
     },
 
     setValuesWrapper: {
-        width: '80%',
-        height: '100%',
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        gap: 12,
     },
 
     setValueText: {
-        fontSize: 14,
-        color: '#ffffff',
-    },
-
-    buttonWrapper: {
-        width: '100%',
-        height: 56,
-        marginTop: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    doneButton: {
-        width: '100%',
-        height: '100%',
+        fontSize: 12,
+        paddingHorizontal: 10,
+        paddingVertical: 4,
         borderRadius: 8,
+        color: '#fff',
+    },
+
+    // 🎯 Done Button
+    doneButton: {
+        marginTop: 24,
+        paddingVertical: 16,
+        borderRadius: 12,
         alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'rgba(59,130,246,0.1)',
+        backgroundColor: 'rgba(59,130,246,0.18)',
     },
 
     doneButtonText: {
-        fontSize: 16,
-        fontWeight: '700',
-        color: '#ffffff',
+        fontSize: 14,
+        fontWeight: '800',
+        color: '#60a5fa',
     },
 
-    successButton: {
-        width: '100%',
-        height: '100%',
-        borderRadius: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'transparent',
-    },
-
-    successIcon: {
-        width: 30,
-        height: 30,
-    },
-
-    recoveryPage: {
-        width: '100%',
-        minHeight: 600,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    recoveryCard: {
-        width: '80%',
-        marginTop: 128,
-        paddingHorizontal: 20,
+    successDoneButton: {
+        marginTop: 24,
+        paddingVertical: 16,
         borderRadius: 12,
+        alignItems: 'center',
+    },
+
+    successDoneIcon: {
+        width: 28,
+        height: 28,
+        color: "#09ff00ff"
+    },
+
+    //Add Button
+    addButton: {
+
+        height: 48,
+        width: 48,
+        borderRadius: '100%',
+
+        display: "flex",
+        alignItems: 'center',
+        justifyContent: 'center',
+
+        marginTop: 24,
+
+        shadowColor: '#09ff00ff',
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+
+    addButtonText: {
+        width: 20, height: 20,
+        color: '#09ff00ff',
+    },
+
+    // ✅ Success icon
+    successIcon: {
+        marginTop: 32,
+        alignSelf: 'center',
+        width: 24,
+        height: 24,
+        opacity: 0.9,
+        color: '#09ff00ff'
+    },
+
+    // MODAL
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: "#0000006e",
+        backdropFilter: "blur(10px)",
+        justifyContent: 'center',
+        padding: 24,
+    },
+
+    modalContainer: {
+
+        borderRadius: 24,
+        padding: 24,
+        gap: 18,
 
         shadowColor: '#ffffff',
         shadowOffset: {
@@ -193,74 +190,67 @@ export const workoutPlanStyles = StyleSheet.create({
             height: 1,
         },
         shadowOpacity: 0.25,
-        shadowRadius: 3,
-        elevation: 3,
+        shadowRadius: 2,
+        elevation: 2,
     },
 
-    recoveryIconWrapper: {
-        width: '100%',
-        height: 112,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ffffff',
+    modalTitle: {
+        color: '#fff',
+        fontSize: 17,
+        fontWeight: '600',
+        letterSpacing: 0.5,
+        marginBottom: 10,
     },
 
-    recoveryIcon: {
-        width: 50,
-        height: 50,
+    input: {
+        color: '#fff',
+        paddingVertical: 14,
+        paddingHorizontal: 14,
+        borderRadius: 14,
+
+        fontSize: 14,
+        writingDirection: "rtl",
+
+        shadowColor: '#ffffff',
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 2,
+        elevation: 2,
     },
 
-    recoveryTitleWrapper: {
-        width: '100%',
-        height: 96,
-        marginTop: 20,
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-    },
-
-    recoveryTitle: {
-        marginVertical: 8,
-        fontSize: 20,
-        textAlign: 'center',
-        color: '#ffffff',
-    },
-
-    recoverySubtitle: {
-        fontSize: 12,
-        lineHeight: 24,
-        textAlign: 'center',
-        color: 'rgba(255,255,255,0.5)',
-    },
-
-    recoveryLinksRow: {
-        width: '100%',
-        height: 80,
-        paddingHorizontal: 12,
+    modalButtons: {
         flexDirection: 'row',
+        gap: 12,
+        marginTop: 6,
     },
 
-    recoveryLinkItem: {
-        width: '33.3333%',
-        height: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    recoveryLinkIcon: {
-        width: 35,
-        height: 35,
-    },
-
-    notFoundContainer: {
+    saveBtn: {
         flex: 1,
+        backgroundColor: '#09ff0017',
+        paddingVertical: 14,
+        borderRadius: 14,
         alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#000000',
     },
 
-    notFoundText: {
-        fontSize: 16,
-        color: '#ffffff',
+    saveText: {
+        fontWeight: '600',
+        color: '#30f139ff',
+        fontSize: 14,
+    },
+
+    cancelBtn: {
+        flex: 1,
+        backgroundColor: 'rgba(255,255,255,0.05)',
+        paddingVertical: 14,
+        borderRadius: 14,
+        alignItems: 'center',
+    },
+
+    cancelText: {
+        color: 'rgba(255,255,255,0.7)',
+        fontSize: 14,
     },
 });

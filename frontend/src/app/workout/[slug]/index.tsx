@@ -1,256 +1,239 @@
 import { workoutPlanStyles as styles } from '@/components/ui/workout-plan.styles';
-import { updateWeekDayPercent } from '@/redux/weekday/weekdaySlice';
+import { setWorkoutMoves, toggleDoneLocal } from '@/redux/workouts/workoutsSlice';
+import axios from 'axios';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
-import { Image, Pressable, ScrollView, Text, View } from 'react-native';
+import { useState } from 'react';
+import {
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
-type SetValue = string | number;
-
-type MovementItem = {
-    id?: string | number;
-    name: string;
-    sets?: SetValue[];
-};
-
-type WeekdayItem = {
-    id?: string | number;
-    name: string;
-    type: string;
-    planfilename: string;
-    activityPercent: number; // مهم: number
-};
-
-type RootState = {
-    weekday: WeekdayItem[];
-};
-
-type RecoveryIconItem = {
-    id: number;
-    name: string;
-    image: any;
-    link: string;
-};
-
 export default function Plan() {
-    const dispatch = useDispatch();
-    const params = useLocalSearchParams<{ slug?: string; weekday?: string }>();
 
-    const weekdayList = useSelector((state: RootState) => state.weekday);
+  // workout data
+  const { slug } = useLocalSearchParams<{ slug: string }>();
+  const dispatch = useDispatch();
 
-    const weekday = useMemo(() => {
-        return weekdayList.find((day) => day.name === params.weekday);
-    }, [weekdayList, params.weekday]);
+  const workouts = useSelector((state: any) => state.workouts);
+  const dayIndex = Number(slug);
+  const workoutList = workouts.days?.[dayIndex]?.exercises || [];
 
-    const recovery = useMemo(
-        () => ({
-            title: 'ریکاوری',
-            subtitle: [
-                'امروز تمرینی نداری. بجاش خوب استراحت کن',
-                'یادت نره رژیم غذایی و خواب کافی داشته باشی',
-                'بدنت نیاز به استراحت داره. امروز رو تمرین نکن',
-                'امروز نیازی نیست بری باشگاه. بجاش روی بقیه چیزا تمرکز کن',
-            ],
-        }),
-        []
-    );
+  console.log(workoutList);
 
-    const subtitleText = useMemo(() => {
-        const rand = Math.floor(Math.random() * recovery.subtitle.length);
-        return recovery.subtitle[rand];
-    }, [recovery.subtitle]);
 
-    const icons: RecoveryIconItem[] = [
-        { id: 0, name: 'profile', image: require('@/assets/icons/profile.png'), link: '/profile' },
-        { id: 1, name: 'diet', image: require('@/assets/icons/diet.png'), link: '/diet' },
-        { id: 2, name: 'blogs', image: require('@/assets/icons/blogs.png'), link: '/blogs' },
-    ];
+  //modal
+  const [modalVisible, setModalVisible] = useState(false);
+  const [exerciseName, setExerciseName] = useState('');
+  const [setsInput, setSetsInput] = useState('');
+  const [loading, setLoading] = useState(false);
 
-    if (!weekday) {
-        return (
-            <View style={styles.notFoundContainer}>
-                <Text style={styles.notFoundText}>برنامه‌ای برای این روز پیدا نشد</Text>
-            </View>
-        );
-    }
+  // workout functions
+  const addNewMove = async () => {
 
-    const dayData = {
-        dataname: weekday.planfilename,
-        name: weekday.name,
-        type: weekday.type,
-    };
+    try {
+      setLoading(true);
 
-    const jsonFile: MovementItem[] = useMemo(() => {
-        try {
-            switch (dayData.dataname) {
-                case 'sat': return require('@/data/workout/dayPlans/sat.json');
-                case 'sun': return require('@/data/workout/dayPlans/sun.json');
-                case 'mon': return require('@/data/workout/dayPlans/mon.json');
-                case 'tue': return require('@/data/workout/dayPlans/tue.json');
-                case 'wed': return require('@/data/workout/dayPlans/wed.json');
-                case 'thu': return require('@/data/workout/dayPlans/thu.json');
-                case 'fri': return require('@/data/workout/dayPlans/fri.json');
-                default: return [];
-            }
-        } catch (error) {
-            console.log('Error loading JSON file:', error);
-            return [];
+      const sets = setsInput.split(' ').map(Number);
+
+      const res = await axios.post(
+
+        `http://localhost:3000/workouts/${workouts._id}/day/${slug}/exercise`,
+        {
+          exerciseId: exerciseName,
+          sets
         }
-    }, [dayData.dataname]);
+      );
 
-    const [movesDone, setMovesDone] = useState<boolean[]>([]);
-    const [percentShow, setPercentShow] = useState(0);
+      setModalVisible(false);
+      setExerciseName('');
+      setSetsInput('');
 
-    useEffect(() => {
-        setMovesDone(jsonFile.map(() => false));
-        setPercentShow(0);
+      // 🔥 sync with backend
+      const userWorkouts = await axios.get(
+        "http://localhost:3000/workouts"
+      );
 
-        // FIX: number به جای string
-        dispatch(
-            updateWeekDayPercent({
-                dayname: dayData.name,
-                dayPercent: 0,
-            })
-        );
-    }, [jsonFile, dayData.name, dispatch]);
+      dispatch(setWorkoutMoves(userWorkouts.data[0]));
 
-    const movementQuantity = jsonFile.length;
-    const movementPercent = movementQuantity > 0 ? 100 / movementQuantity : 0;
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const handleMoveDone = (index: number) => {
-        if (movesDone[index]) return;
 
-        const newMovesDone = [...movesDone];
-        newMovesDone[index] = true;
+  return (
 
-        const doneCount = newMovesDone.filter(Boolean).length;
-        const newPercent = Math.min(doneCount * movementPercent, 100);
+    <>
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
+        <View style={styles.page}>
 
-        setMovesDone(newMovesDone);
-        setPercentShow(newPercent);
+          {/* Progress */}
+          <View style={styles.percentBox}>
+            <Text style={styles.percentNumberText}>
+              30%
+            </Text>
 
-        // FIX: number ذخیره میشه (نه string)
-        dispatch(
-            updateWeekDayPercent({
-                dayname: dayData.name,
-                dayPercent: Math.round(newPercent),
-            })
-        );
-    };
+            <View style={styles.percentBarBackground}>
+              <View
+                style={[
+                  styles.percentBarFill,
+                  { width: `${30}%` },
+                ]}
+              />
+            </View>
+          </View>
 
-    return (
-        <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-            <View style={styles.page}>
+          {/* Exercises */}
+          {workoutList.map((item: any, index: number) => (
 
-                {dayData.type === 'workday' ? (
-                    <View style={styles.workSection}>
+            // move box
+            <View
+              key={`${item.exerciseId}-${index}`}
+              style={[
+                styles.movementCard,
+                item.isDone && styles.movementCardDone,
+              ]}
+            >
+              <Text style={styles.movementName}>
+                {item.exerciseId}
+              </Text>
 
-                        <View style={styles.percentBox}>
-                            <View style={styles.percentNumberWrapper}>
-                                <Text style={styles.percentNumberText}>
-                                    {Math.round(percentShow)}%
-                                </Text>
-                            </View>
+              <View style={styles.setRow}>
+                <Text style={styles.setCountText}>
+                  {item.sets.length} ست
+                </Text>
 
-                            <View style={styles.percentBarWrapper}>
-                                <View style={styles.percentBarBackground}>
-                                    <View
-                                        style={[
-                                            styles.percentBarFill,
-                                            { width: `${percentShow}%` },
-                                        ]}
-                                    />
-                                </View>
-                            </View>
-                        </View>
+                <View style={styles.setValuesWrapper}>
+                  {item.sets.map((set: number, i: number) => (
+                    <Text key={i} style={styles.setValueText}>
+                      {set}
+                    </Text>
+                  ))}
+                </View>
+              </View>
 
-                        {jsonFile.map((movement, index) => {
-                            const isDone = movesDone[index];
+              <>
 
-                            return (
-                                <View
-                                    key={movement.id ?? index}
-                                    style={[
-                                        styles.movementCard,
-                                        isDone && styles.movementCardDone,
-                                    ]}
-                                >
-                                    <View style={styles.movementNameWrapper}>
-                                        <Text style={styles.movementName} numberOfLines={1}>
-                                            {movement.name}
-                                        </Text>
-                                    </View>
+                {
+                  !item.isDone ? (
 
-                                    <View style={styles.setRow}>
-                                        <View style={styles.setCountWrapper}>
-                                            <Text style={styles.setCountText}>
-                                                {movement.sets?.length || 0} ست
-                                            </Text>
-                                        </View>
+                    <Pressable
+                      style={styles.doneButton}
+                      onPress={() => {
+                        dispatch(
+                          toggleDoneLocal({
+                            dayIndex,
+                            exerciseIndex: index
+                          })
+                        )
+                      }}
+                    >
+                      <Text style={styles.doneButtonText}>
+                        اتمام حرکت
+                      </Text>
+                    </Pressable>
 
-                                        <View style={styles.setValuesWrapper}>
-                                            {movement.sets?.map((setValue, setIndex) => (
-                                                <Text key={setIndex} style={styles.setValueText}>
-                                                    {setValue}
-                                                </Text>
-                                            ))}
-                                        </View>
-                                    </View>
+                  ) : (
 
-                                    <View style={styles.buttonWrapper}>
-                                        {!isDone ? (
-                                            <Pressable
-                                                style={styles.doneButton}
-                                                onPress={() => handleMoveDone(index)}
-                                            >
-                                                <Text style={styles.doneButtonText}>اتمام حرکت</Text>
-                                            </Pressable>
-                                        ) : (
-                                            <View style={styles.successButton}>
-                                                <Image
-                                                    source={require('@/assets/icons/success.png')}
-                                                    style={styles.successIcon}
-                                                    resizeMode="contain"
-                                                />
-                                            </View>
-                                        )}
-                                    </View>
-                                </View>
-                            );
-                        })}
-                    </View>
-                ) : (
-                    <View style={styles.recoveryPage}>
-                        <View style={styles.recoveryCard}>
-                            <View style={styles.recoveryIconWrapper}>
-                                <Image
-                                    source={require('@/assets/icons/recovery.png')}
-                                    style={styles.recoveryIcon}
-                                    resizeMode="contain"
-                                />
-                            </View>
+                    <Pressable
+                      style={styles.successDoneButton}
+                      onPress={() => {
+                        dispatch(
+                          toggleDoneLocal({
+                            dayIndex,
+                            exerciseIndex: index
+                          })
+                        )
+                      }}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={styles.successDoneIcon}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                      </svg>
+                    </Pressable>
+                  )
+                }
 
-                            <View style={styles.recoveryTitleWrapper}>
-                                <Text style={styles.recoveryTitle}>{recovery.title}</Text>
-                                <Text style={styles.recoverySubtitle}>{subtitleText}</Text>
-                            </View>
+              </>
 
-                            <View style={styles.recoveryLinksRow}>
-                                {icons.map((item) => (
-                                    <View key={item.id} style={styles.recoveryLinkItem}>
-                                        <Image
-                                            source={item.image}
-                                            style={styles.recoveryLinkIcon}
-                                            resizeMode="contain"
-                                        />
-                                    </View>
-                                ))}
-                            </View>
-                        </View>
-                    </View>
-                )}
 
             </View>
-        </ScrollView>
-    );
+          ))}
+
+          {/* Add */}
+          <Pressable
+            onPress={() => setModalVisible(true)}
+            style={styles.addButton}
+          >
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={styles.addButtonText}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+
+          </Pressable>
+
+        </View>
+
+      </ScrollView>
+
+      {/* Modal */}
+      <Modal visible={modalVisible} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+
+            <Text style={styles.modalTitle}>
+              حرکت جدید
+            </Text>
+
+            <TextInput
+              placeholder="نام حرکت"
+              placeholderTextColor="#666"
+              value={exerciseName}
+              onChangeText={setExerciseName}
+              style={styles.input}
+            />
+
+            <TextInput
+              placeholder="12 10 8"
+              placeholderTextColor="#666"
+              value={setsInput}
+              onChangeText={setSetsInput}
+              style={styles.input}
+            />
+
+            <View style={styles.modalButtons}>
+
+              <Pressable
+                onPress={addNewMove}
+                style={styles.saveBtn}
+                disabled={loading}
+              >
+                <Text style={styles.saveText}>
+                  {loading ? '...' : 'تایید'}
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => { setModalVisible(false) }}
+                style={styles.cancelBtn}
+              >
+                <Text style={styles.cancelText}>
+                  انصراف
+                </Text>
+              </Pressable>
+
+            </View>
+
+          </View>
+        </View>
+      </Modal>
+
+    </>
+  );
 }

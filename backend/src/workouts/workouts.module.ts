@@ -1,9 +1,18 @@
-import { Module } from '@nestjs/common';
-import { WorkoutsService } from './workouts.service';
-import { WorkoutsController } from './workouts.controller';
+import { Module } from '@nestjs/common'
+import { MongooseModule } from '@nestjs/mongoose'
+import { WorkoutsController } from './workouts.controller'
+import { WorkoutsService } from './workouts.service'
+import { Workout, WorkoutSchema } from './workout.schema'
 
 @Module({
+  imports: [
+    MongooseModule.forFeature([
+      { name: Workout.name, schema: WorkoutSchema },
+    ]),
+  ],
+  controllers: [WorkoutsController],
   providers: [WorkoutsService],
-  controllers: [WorkoutsController]
+
+  exports: [WorkoutsService, MongooseModule],
 })
-export class WorkoutsModule {}
+export class WorkoutModule { }

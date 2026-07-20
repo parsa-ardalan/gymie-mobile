@@ -350,7 +350,6 @@ export default function SignUp() {
 
         <View style={styles.container}>
 
-
             <View style={styles.inner}>
 
 
@@ -583,6 +582,20 @@ export default function SignUp() {
 
                 }
 
+                <TouchableOpacity
+                    onPress={() => router.push("/auth/login")}
+                    style={{ marginTop: 16 }}
+                >
+                    <Text style={{
+                        color: "#888",
+                        textAlign: "center",
+                        fontSize: 12,
+                        marginTop: 10
+                    }}>
+                        حساب داری؟ وارد شو
+                    </Text>
+                </TouchableOpacity>
+
             </View>
 
             <Modal
@@ -634,8 +647,6 @@ export default function SignUp() {
 
 
             </Modal>
-
-
 
         </View>
 

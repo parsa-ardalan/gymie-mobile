@@ -201,7 +201,7 @@ export default function Login() {
                     );
 
 
-                    router.replace("/profile");
+                    router.replace("/");
 
 
                 } catch (error) {
@@ -220,7 +220,6 @@ export default function Login() {
             }
         }
     };
-
 
 
     return (
@@ -398,6 +397,20 @@ export default function Login() {
 
 
                 </Modal>
+
+                <TouchableOpacity
+                    onPress={() => router.push("/auth/signup")}
+                    style={{ marginTop: 16 }}
+                >
+                    <Text style={{
+                        color: "#888",
+                        textAlign: "center",
+                        fontSize: 12,
+                        marginTop: 10
+                    }}>
+                        حساب نداری؟ ثبت‌نام کن
+                    </Text>
+                </TouchableOpacity>
 
             </View>
 

@@ -5,23 +5,21 @@ import { persistReducer, persistStore } from "redux-persist";
 
 import userSlice from "../profile/profileSlice";
 import sleepingSlice from "../sleeping/sleepingSlice";
-import weekdaySlice from "../weekday/weekdaySlice";
+import workoutsSlice from "../workouts/workoutsSlice";
 
 // combine reducers
-
 const rootReducer = combineReducers({
     user: userSlice,
-    weekday: weekdaySlice,
     sleeping: sleepingSlice,
+    workouts: workoutsSlice
 });
 
 // persist config
-
 const persistConfig = {
     key: "root",
     storage: AsyncStorage,
 
-    whitelist: ["sleeping", "user", "weekday"],
+    whitelist: ["sleeping", "user", "workouts"]
 };
 
 // persisted reducer

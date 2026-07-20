@@ -5,18 +5,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { UsersModule } from './users/users.module';
-import { WorkoutsModule } from './workouts/workouts.module';
+import { WorkoutModule } from './workouts/workouts.module'; // ✅ اصلاح شد
 import { DietModule } from './diet/diet.module';
 import { SleepingModule } from './sleeping/sleeping.module';
 import { AuthModule } from './auth/auth.module';
 
 import { CounterModule } from './counters/counter.module';
 
-
 @Module({
-
   imports: [
-
     MongooseModule.forRoot(
       'mongodb://localhost:27017/gymie'
     ),
@@ -24,11 +21,10 @@ import { CounterModule } from './counters/counter.module';
     CounterModule,
 
     UsersModule,
-    WorkoutsModule,
+    WorkoutModule,
     DietModule,
     SleepingModule,
     AuthModule,
-
   ],
 
   controllers: [
@@ -38,7 +34,5 @@ import { CounterModule } from './counters/counter.module';
   providers: [
     AppService
   ],
-
 })
-
 export class AppModule { }
