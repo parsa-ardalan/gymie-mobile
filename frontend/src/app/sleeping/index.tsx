@@ -1,122 +1,107 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Animated, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
-import { useDispatch, useSelector } from "react-redux";
 
 import styles from "@/components/ui/sleeping-page.styles";
-import {
-    changeBedTime,
-    changeWakeTime,
-    setSleepingHour,
-    setUserSleepingHour
-} from "@/redux/sleeping/sleepingSlice";
-
-const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+import { updateSleeping } from "@/redux/sleeping/sleepingSlice";
+import axios from "axios";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Sleeping() {
 
-    const profile = useSelector((state: any) => state.user)
-
     const dispatch = useDispatch();
-    const sleepingInfo = useSelector((state: any) => state.sleeping);
-
-    const progressAnim = useRef(new Animated.Value(0)).current;
 
     const radius = 90;
     const circumference = 2 * Math.PI * radius;
 
-    const [goToBed, setGoToBed] = useState(sleepingInfo.bedTime);
-    const [wakeUp, setWakeUp] = useState(sleepingInfo.wakeTime);
+    const sleepingRedux = useSelector(
+        (state: any) => state.sleeping
+    );
 
-    const age = profile.age;
-    const trainingDaysPerWeek = 4;
-
-    const totalSleepHours = useMemo(() => {
-        const base = 7;
-        const ageAdj = age < 25 ? 0.5 : 0;
-        const trainingAdj = trainingDaysPerWeek * 0.3;
-
-        return base + ageAdj + trainingAdj;
-    }, [age]);
-
-    // -------------------------
-    // offered sleep (Redux)
-    // -------------------------
     useEffect(() => {
-        dispatch(setSleepingHour(totalSleepHours));
-    }, [dispatch, totalSleepHours]);
 
-    const toMinutes = (t: string) => {
-        if (!t) return 0;
+        const getSleeping = async () => {
+            try {
+                const res = await axios.get("http://localhost:3000/sleeping");
 
-        const [h, m] = t.split(":").map(Number);
-        if (isNaN(h) || isNaN(m)) return 0;
+                // اگر آرایه بود
+                const data = Array.isArray(res.data) ? res.data[0] : res.data;
 
-        return h * 60 + m;
+                dispatch(updateSleeping(data));
+            } catch (err) {
+                console.log("GET sleeping error:", err);
+            }
+        };
+
+        getSleeping();
+
+    }, []);
+
+    const calculateSleepHours = () => {
+
+        if (!sleepingRedux?.bedTime || !sleepingRedux?.wakeTime) return 0;
+
+        const [bedH, bedM] = sleepingRedux.bedTime.split(":").map(Number);
+        const [wakeH, wakeM] = sleepingRedux.wakeTime.split(":").map(Number);
+
+        let bedMinutes = bedH * 60 + bedM;
+        let wakeMinutes = wakeH * 60 + wakeM;
+
+        if (wakeMinutes < bedMinutes) {
+            wakeMinutes += 24 * 60;
+        }
+
+        return Number(((wakeMinutes - bedMinutes) / 60).toFixed(1));
     };
 
-    // -------------------------
-    // actual sleep
-    // -------------------------
-    const actualSleepingTime = useMemo(() => {
-        const bed = toMinutes(goToBed);
-        const wake = toMinutes(wakeUp);
+    const sleepHours = calculateSleepHours();
+    const progress = sleepHours / 24; // هدف 8 ساعت
 
-        let diff = wake - bed;
-        if (diff < 0) diff += 1440;
+    const editBedTime = async (value: string) => {
 
-        return diff / 60;
-    }, [goToBed, wakeUp]);
+        dispatch(updateSleeping({
+            ...sleepingRedux,
+            bedTime: value
+        }));
 
-    // -------------------------
-    // FIX: Redux sync (IMPORTANT)
-    // -------------------------
-    useEffect(() => {
-        dispatch(setUserSleepingHour(actualSleepingTime));
-    }, [sleepingInfo.bedTime, sleepingInfo.wakeTime]);
+        try {
+            await axios.patch("http://localhost:3000/sleeping", {
+                user_id: sleepingRedux.user_id,
+                bedTime: value
+            });
+        } catch (err) {
+            console.log("PATCH bedTime error:", err);
+        }
+    };
 
-    // -------------------------
-    // percentage
-    // -------------------------
-    const percentage = useMemo(() => {
-        return Math.min(
-            100,
-            Math.max(0, (actualSleepingTime / 24) * 100)
-        );
-    }, [actualSleepingTime]);
+    const editWakeTime = async (value: string) => {
 
-    useEffect(() => {
-        progressAnim.stopAnimation();
+        dispatch(updateSleeping({
+            ...sleepingRedux,
+            wakeTime: value
+        }));
 
-        Animated.timing(progressAnim, {
-            toValue: percentage,
-            duration: 600,
-            useNativeDriver: false,
-        }).start();
-    }, [percentage]);
+        try {
+            await axios.patch("http://localhost:3000/sleeping", {
+                user_id: sleepingRedux.user_id,
+                wakeTime: value
+            });
+        } catch (err) {
+            console.log("PATCH wakeTime error:", err);
+        }
+    };
 
-    // -------------------------
-    // sync inputs with redux (cleaned)
-    // -------------------------
-    useEffect(() => {
-        setGoToBed(sleepingInfo.bedTime);
-    }, [sleepingInfo.bedTime]);
-
-    useEffect(() => {
-        setWakeUp(sleepingInfo.wakeTime);
-    }, [sleepingInfo.wakeTime]);
-
-    const strokeDashoffset = progressAnim.interpolate({
-        inputRange: [0, 100],
-        outputRange: [circumference, 0],
-    });
 
     return (
+
         <View style={styles.page}>
 
             <View style={styles.card}>
+
                 <View style={styles.badge}>
-                    <Text style={styles.badgeText}> خواب شبانه </Text>
+                    <Text style={styles.badgeText}>
+                        خواب شبانه
+                    </Text>
                 </View>
 
                 <Text style={styles.infoText}>
@@ -127,59 +112,80 @@ export default function Sleeping() {
                 <View style={styles.divider} />
 
                 <View style={styles.row}>
+
                     <View>
-                        <Text style={styles.label}>تایم خواب پیشنهادی</Text>
-                        <Text style={styles.subLabel}>بر اساس سن و فعالیت روزانه</Text>
+                        <Text style={styles.label}>
+                            تایم خواب پیشنهادی
+                        </Text>
+
+                        <Text style={styles.subLabel}>
+                            بر اساس سن و فعالیت روزانه
+                        </Text>
                     </View>
 
                     <View style={styles.valueBox}>
                         <Text style={styles.value}>
-                            {sleepingInfo.offeredSleepingHour} ساعت
+                            8 ساعت
                         </Text>
                     </View>
+
                 </View>
+
             </View>
 
+
+            {/* INPUTS */}
             <View style={styles.inputs}>
+
+                {/* BED TIME */}
                 <View style={styles.inputBox}>
-                    <Text style={styles.inputLabel}>تایم خوابیدن</Text>
+
+                    <Text style={styles.inputLabel}>
+                        تایم خوابیدن
+                    </Text>
 
                     <View style={styles.timeInputWrapper}>
                         <TextInput
-                            value={goToBed}
-                            onChangeText={(text) => {
-                                setGoToBed(text);
-                                dispatch(changeBedTime(text));
-                            }}
-                            placeholder={sleepingInfo.bedTime}
+                            value={sleepingRedux?.bedTime || ""}
+                            onChangeText={editBedTime}
+                            placeholder="23:00"
                             placeholderTextColor="rgba(255,255,255,0.3)"
                             style={styles.timeInput}
                             keyboardType="numeric"
                         />
                     </View>
+
                 </View>
 
+                {/* WAKE TIME */}
                 <View style={styles.inputBox}>
-                    <Text style={styles.inputLabel}>تایم بیداری</Text>
+
+                    <Text style={styles.inputLabel}>
+                        تایم بیداری
+                    </Text>
 
                     <View style={styles.timeInputWrapper}>
                         <TextInput
-                            value={wakeUp}
-                            onChangeText={(text) => {
-                                setWakeUp(text);
-                                dispatch(changeWakeTime(text));
-                            }}
-                            placeholder={sleepingInfo.wakeTime}
+                            value={sleepingRedux?.wakeTime || ""}
+                            onChangeText={editWakeTime}
+                            placeholder="07:00"
                             placeholderTextColor="rgba(255,255,255,0.3)"
                             style={styles.timeInput}
                             keyboardType="numeric"
                         />
                     </View>
+
                 </View>
+
             </View>
 
+
+            {/* CIRCLE */}
             <View style={styles.circleWrapper}>
+
                 <Svg width={220} height={220}>
+
+                    {/* background */}
                     <Circle
                         cx="110"
                         cy="110"
@@ -189,7 +195,8 @@ export default function Sleeping() {
                         fill="transparent"
                     />
 
-                    <AnimatedCircle
+                    {/* progress */}
+                    <Circle
                         cx="110"
                         cy="110"
                         r={radius}
@@ -197,18 +204,23 @@ export default function Sleeping() {
                         strokeWidth={10}
                         fill="transparent"
                         strokeDasharray={circumference}
-                        strokeDashoffset={strokeDashoffset}
+                        strokeDashoffset={circumference * (1 - progress)}
                         strokeLinecap="round"
                         transform="rotate(-90 110 110)"
                     />
+
                 </Svg>
 
                 <View style={styles.circleText}>
                     <Text style={styles.circleValue}>
-                        {actualSleepingTime.toFixed(1)}
+                        {sleepHours}
                     </Text>
-                    <Text style={styles.circleLabel}>ساعت</Text>
+
+                    <Text style={styles.circleLabel}>
+                        ساعت
+                    </Text>
                 </View>
+
             </View>
 
         </View>

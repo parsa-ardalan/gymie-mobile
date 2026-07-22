@@ -6,12 +6,14 @@ import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
 import { WorkoutModule } from '../workouts/workouts.module';
 import { DietModule } from '../diet/diet.module';
+import { SleepingModule } from '../sleeping/sleeping.module'; // ✅ اضافه شد
 
 @Module({
     imports: [
         UsersModule,
         WorkoutModule,
-        DietModule
+        DietModule,
+        SleepingModule // ✅ اضافه شد
     ],
     providers: [
         AuthService

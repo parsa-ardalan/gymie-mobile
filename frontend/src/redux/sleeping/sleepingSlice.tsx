@@ -1,43 +1,75 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export type SLeepingState = {
-    offeredSleepingHour: number,
-    userSleepingHour: number
-    bedTime: string,
-    wakeTime: string
+
+export type SleepingState = {
+
+    _id: string;
+    user_id: string;
+    bedTime: string;
+    wakeTime: string;
+    sleepDuration: number;
+    createdAt: string;
+    updatedAt: string;
+
 }
 
-const initialState: SLeepingState = {
-    offeredSleepingHour: 0,
-    bedTime: "23:00",
-    wakeTime: "07:00",
-    userSleepingHour: 0,
+
+const initialState: SleepingState = {
+
+    _id: "",
+    user_id: "",
+    bedTime: "",
+    wakeTime: "",
+    sleepDuration: 0,
+    createdAt: "",
+    updatedAt: ""
+
 }
+
 
 const sleepingSlice = createSlice({
+
     name: "sleeping",
+
     initialState,
+
     reducers: {
 
+
         changeBedTime: (state, action) => {
+
             state.bedTime = action.payload;
+
         },
+
 
         changeWakeTime: (state, action) => {
+
             state.wakeTime = action.payload;
+
         },
 
-        setSleepingHour: (state, action) => {
-            state.offeredSleepingHour = action.payload;
+
+        updateSleeping: (state, action) => {
+
+            return {
+                ...state,
+                ...action.payload
+            };
+
         },
 
-        setUserSleepingHour: (state, action) => {
-            state.userSleepingHour = action.payload;
-            console.log(action.payload)
-        }
-    },
+    }
+
 });
 
-export const { changeBedTime, changeWakeTime, setSleepingHour, setUserSleepingHour } = sleepingSlice.actions;
+
+export const {
+    changeBedTime,
+    changeWakeTime,
+    updateSleeping
+
+} = sleepingSlice.actions;
+
 
 export default sleepingSlice.reducer;

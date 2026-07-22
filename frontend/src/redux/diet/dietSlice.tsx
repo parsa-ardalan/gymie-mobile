@@ -167,15 +167,9 @@ const dietSlice = createSlice({
                     ingredient;
 
             }
-
         },
-
-
     }
-
 });
-
-
 
 
 export const {
