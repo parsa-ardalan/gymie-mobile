@@ -83,11 +83,8 @@ export default function Diet() {
         {diet.days?.map((day: any) => (
 
           <Pressable
-
             key={day.dayOfWeek}
-
             style={styles.card}
-
             onPress={() =>
               router.push({
 

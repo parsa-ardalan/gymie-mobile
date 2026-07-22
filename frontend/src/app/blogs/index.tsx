@@ -1,29 +1,61 @@
+import axios from "axios";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
 import styles from "@/components/ui/blogs-page.styles";
-import blogs from "@/data/blogs/blogs.json";
+import { updateBlogs } from "@/redux/blogs/blogsSlice";
+import { useDispatch } from "react-redux";
+
+interface Blog {
+    _id: string;
+    title: string;
+    blogText: string;
+    minTime: number;
+}
 
 export default function Blogs() {
+
     const router = useRouter();
+    const dispatch = useDispatch();
+
+    const [blogs, setBlogs] = useState<Blog[]>([]);
+
+    const getBlogs = async () => {
+
+        try {
+            const res = await axios.get("http://localhost:3000/blogs");
+            setBlogs(res.data);
+            dispatch(updateBlogs(res.data))
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    useEffect(() => {
+        getBlogs();
+    }, []);
 
     return (
         <View style={styles.page}>
             <FlatList
                 data={blogs}
-                keyExtractor={(item) => String(item.id)}
+                keyExtractor={(item) => item._id}
                 contentContainerStyle={styles.list}
-                showsVerticalScrollIndicator={false}   // ✅ اینو اضافه کن
+                showsVerticalScrollIndicator={false}
+
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={styles.card}
                         onPress={() =>
                             router.push({
-                                pathname: "/blogs/[slug]",
+
+                                pathname: '/blogs/[slug]',
+
                                 params: {
-                                    slug: item.title,
-                                    blogID: item.id,
+                                    slug: item._id
                                 },
+
                             })
                         }
                     >
@@ -43,7 +75,9 @@ export default function Blogs() {
 
                         {/* footer */}
                         <View style={styles.footer}>
-                            <Text style={styles.time}>{item.minTime} دقیقه</Text>
+                            <Text style={styles.time}>
+                                {item.minTime} دقیقه
+                            </Text>
                         </View>
                     </TouchableOpacity>
                 )}

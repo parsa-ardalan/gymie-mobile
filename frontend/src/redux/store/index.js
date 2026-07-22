@@ -6,6 +6,7 @@ import { persistReducer, persistStore } from "redux-persist";
 // import slices
 import userSlice from "../profile/profileSlice";
 
+import blogsSlice from "../blogs/blogsSlice";
 import dietSlice from "../diet/dietSlice";
 import sleepingSlice from "../sleeping/sleepingSlice";
 import workoutsSlice from "../workouts/workoutsSlice";
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
     user: userSlice,
     sleeping: sleepingSlice,
     workouts: workoutsSlice,
-    diet: dietSlice
+    diet: dietSlice,
+    blogs: blogsSlice
 });
 
 // persist config
@@ -24,7 +26,7 @@ const persistConfig = {
     key: "root",
     storage: AsyncStorage,
 
-    whitelist: ["sleeping", "user", "workouts", "diet"]
+    whitelist: ["sleeping", "user", "workouts", "diet", "blogs"]
 };
 
 // persisted reducer

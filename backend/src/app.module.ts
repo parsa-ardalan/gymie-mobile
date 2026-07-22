@@ -9,14 +9,13 @@ import { WorkoutModule } from './workouts/workouts.module'; // ✅ اصلاح ش
 import { DietModule } from './diet/diet.module';
 import { SleepingModule } from './sleeping/sleeping.module';
 import { AuthModule } from './auth/auth.module';
+import { BlogsModule } from './blogs/blogs.module';
 
 import { CounterModule } from './counters/counter.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb://localhost:27017/gymie'
-    ),
+    MongooseModule.forRoot('mongodb://localhost:27017/gymie'),
 
     CounterModule,
 
@@ -25,6 +24,8 @@ import { CounterModule } from './counters/counter.module';
     DietModule,
     SleepingModule,
     AuthModule,
+
+    BlogsModule, // ✅ اینو اضافه کن
   ],
 
   controllers: [

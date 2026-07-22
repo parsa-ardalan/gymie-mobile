@@ -1,21 +1,16 @@
-import { useLocalSearchParams } from "expo-router";
 import { Text, View } from "react-native";
 
 import styles from "@/components/ui/blog-detail.styles";
-import blogs from "@/data/blogs/blogs.json";
+
+import { useLocalSearchParams } from "expo-router";
+import { useSelector } from "react-redux";
 
 export default function BlogDetail() {
-  const { blogID } = useLocalSearchParams();
 
-  const blog = blogs.find((b: any) => String(b.id) === String(blogID));
+  const { slug } = useLocalSearchParams();
 
-  if (!blog) {
-    return (
-      <View style={styles.page}>
-        <Text style={styles.title}>Blog not found</Text>
-      </View>
-    );
-  }
+  const blogs = useSelector((state: any) => state.blogs);
+  const blog = blogs.find((blog: any) => blog._id == slug);
 
   return (
     <View style={styles.page}>
@@ -23,7 +18,7 @@ export default function BlogDetail() {
       {/* title */}
       <View style={styles.card}>
         <Text style={styles.title}>
-          {blog.title}
+         { blog.title}
         </Text>
       </View>
 
