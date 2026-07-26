@@ -65,7 +65,7 @@ export default function Profile() {
 
                     <View style={styles.boxOrange}>
                         <Text style={styles.numberOrange}>
-                            {profile.dayStreak}
+                            {16}
                         </Text>
                         <Text style={styles.label}>روزهای فعال</Text>
                     </View>
