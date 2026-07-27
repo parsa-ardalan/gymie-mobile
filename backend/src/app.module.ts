@@ -15,17 +15,17 @@ import { CounterModule } from './counters/counter.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/gymie'),
-
+    MongooseModule.forRoot(
+      'mongodb+srv://parsardlan2112_db_user:Parsa_8727_FST_dbs_807@gymie.cgskqut.mongodb.net/gymie-db?retryWrites=true&w=majority'
+    ),
     CounterModule,
-
     UsersModule,
     WorkoutModule,
     DietModule,
     SleepingModule,
     AuthModule,
 
-    BlogsModule, // ✅ اینو اضافه کن
+    BlogsModule,
   ],
 
   controllers: [
