@@ -13,27 +13,26 @@ import { BlogsModule } from './blogs/blogs.module';
 
 import { CounterModule } from './counters/counter.module';
 
+import { ConfigModule } from '@nestjs/config';
+
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://parsardlan2112_db_user:Parsa_8727_FST_dbs_807@gymie.cgskqut.mongodb.net/gymie-db?retryWrites=true&w=majority'
-    ),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+
+    MongooseModule.forRoot(process.env.MONGO_URI!),
+    
     CounterModule,
     UsersModule,
     WorkoutModule,
     DietModule,
     SleepingModule,
     AuthModule,
-
     BlogsModule,
   ],
 
-  controllers: [
-    AppController
-  ],
-
-  providers: [
-    AppService
-  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule { }
