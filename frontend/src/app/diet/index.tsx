@@ -19,7 +19,7 @@ export default function Diet() {
   const dispatch = useDispatch();
   const hasFetched = useRef(false);
 
-  const BASE_URL = "http://localhost:3000";
+  const BASE_URL = "https://gymie-mobile.onrender.com";
 
   useEffect(() => {
 

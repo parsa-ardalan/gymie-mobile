@@ -38,7 +38,7 @@ export default function Account() {
         try {
 
             const response = await axios.put(
-                `http://localhost:3000/users/${profile._id}`,
+                `https://gymie-mobile.onrender.com/users/${profile._id}`,
                 {
                     name,
                     bio,

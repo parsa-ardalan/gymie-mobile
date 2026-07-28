@@ -1,6 +1,7 @@
 import styles from "@/components/ui/auth-page.styles";
+
 import { updateProfile } from "@/redux/profile/profileSlice";
-import axios from "axios";
+
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import {
@@ -11,11 +12,13 @@ import {
     TouchableOpacity,
     View
 } from "react-native";
+
+// new
+import { sendSignupOtp, verifySignupOtp } from "@/services/auth.service";
+
 import { useDispatch } from "react-redux";
 
-
-const API_URL = "http://localhost:3000";
-
+// response
 
 export default function SignUp() {
 
@@ -109,24 +112,14 @@ export default function SignUp() {
 
         if (step === 1) {
 
-
             if (!form.name.trim() || !form.bio.trim()) {
-
-                return showError(
-                    "لطفاً همه فیلدها را پر کنید"
-                );
-
+                return showError("لطفاً همه فیلدها را پر کنید");
             }
 
-            dispatch(
-                updateProfile({
-
-                    name: form.name,
-
-                    bio: form.bio
-
-                })
-            );
+            dispatch(updateProfile({
+                name: form.name,
+                bio: form.bio
+            }));
 
             return setStep(2);
         }
@@ -134,97 +127,49 @@ export default function SignUp() {
 
         if (step === 2) {
 
-
             if (
-
                 form.age.length !== 2 ||
-
                 form.height.length !== 3 ||
-
                 !form.weight ||
-
                 form.weight.length > 3
-
             ) {
-
-                return showError(
-                    "اطلاعات وارد شده صحیح نیست"
-                );
-
+                return showError("اطلاعات وارد شده صحیح نیست");
             }
 
-
-            dispatch(
-
-                updateProfile({
-
-                    age: Number(form.age),
-
-                    height: Number(form.height),
-
-                    weight: Number(form.weight)
-
-                })
-            );
-
+            dispatch(updateProfile({
+                age: Number(form.age),
+                height: Number(form.height),
+                weight: Number(form.weight)
+            }));
 
             return setStep(3);
         }
 
+
         if (step === 3) {
 
-
-            if (
-                !/^09\d{9}$/.test(form.phone)
-            ) {
-
-                return showError(
-                    "شماره موبایل نامعتبر است"
-                );
-
+            if (!/^09\d{9}$/.test(form.phone)) {
+                return showError("شماره موبایل نامعتبر است");
             }
 
             try {
 
+                const result = await sendSignupOtp({
+                    name: form.name,
+                    bio: form.bio,
+                    phoneNumber: form.phone,
+                    age: Number(form.age),
+                    height: Number(form.height),
+                    weight: Number(form.weight),
+                });
 
-                const response = await axios.post(
+                console.log("SEND OTP RESULT:", result);
 
-                    `${API_URL}/auth/signup/send-otp`,
-
-                    {
-
-                        name: form.name,
-
-                        bio: form.bio,
-
-                        phoneNumber: form.phone,
-
-                        age: Number(form.age),
-
-                        height: Number(form.height),
-
-                        weight: Number(form.weight)
-
-                    }
-
-                );
-
-                console.log(
-                    response.data
-                );
-
-                if (!response.data.success) {
-
-                    return showError(
-                        response.data.message
-                    );
-
+                if (!result.success) {
+                    return showError(result.message);
                 }
 
-                setServerOtp(
-                    String(response.data.otp)
-                );
-
+                setServerOtp(String(result.otp));
 
                 setStep(4);
 
@@ -232,14 +177,9 @@ export default function SignUp() {
 
                 console.log(error);
 
-                showError(
-                    "خطا در ارتباط با سرور"
-                );
-
+                showError("خطا در ارتباط با سرور");
             }
-
         }
-
     };
 
     const handleOtpChange = (
@@ -283,67 +223,40 @@ export default function SignUp() {
 
     const verifyOtp = async (code: string) => {
 
-
+        // ❗ (فعلاً نگهش داشتیم، ولی بعداً بهتره حذفش کنیم)
         if (code !== serverOtp) {
-
             setOtpValid(false);
-
-            return showError(
-                "کد اشتباه است"
-            );
-
+            return showError("کد اشتباه است");
         }
 
         try {
 
-            const response = await axios.post(
+            const result = await verifySignupOtp({
+                phoneNumber: form.phone,
+                otp: code,
+            });
 
-                `${API_URL}/auth/signup/verify-otp`,
+            console.log("VERIFY RESULT:", result);
 
-                {
-
-                    phoneNumber: form.phone,
-
-                    otp: code
-
-                }
-
-            );
-
-            console.log("VERIFY RESPONSE:", response.data);
-
-
-            if (!response.data.success) {
-
+            if (!result.success) {
                 setOtpValid(false);
-
-                return showError(
-                    response.data.message
-                );
+                return showError(result.message);
             }
-
 
             setOtpValid(true);
 
-
-            saveProfile(response.data.user);
-
+            saveProfile(result.user);
 
             setTimeout(() => {
-
                 router.replace("/");
-
             }, 400);
 
         } catch (error) {
 
             console.log(error);
 
-            showError(
-                "خطا در تایید OTP"
-            );
+            showError("خطا در تایید OTP");
         }
-
     };
 
     return (

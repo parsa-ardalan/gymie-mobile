@@ -1,6 +1,6 @@
 import { workoutPlanStyles as styles } from '@/components/ui/workout-plan.styles';
 import { setWorkoutMoves, toggleDoneLocal } from '@/redux/workouts/workoutsSlice';
-import axios from 'axios';
+import { addExerciseToDay, getWorkouts } from '@/services/workouts.service'; // ✅ اینجا
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -15,7 +15,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 export default function Plan() {
 
-  // workout data
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const dispatch = useDispatch();
 
@@ -23,16 +22,13 @@ export default function Plan() {
   const dayIndex = Number(slug);
   const workoutList = workouts.days?.[dayIndex]?.exercises || [];
 
-  console.log(workoutList);
-
-
-  //modal
+  // modal
   const [modalVisible, setModalVisible] = useState(false);
   const [exerciseName, setExerciseName] = useState('');
   const [setsInput, setSetsInput] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // workout functions
+  // ✅ فقط این تابع عوض شد
   const addNewMove = async () => {
 
     try {
@@ -40,25 +36,30 @@ export default function Plan() {
 
       const sets = setsInput.split(' ').map(Number);
 
-      const res = await axios.post(
-
-        `http://localhost:3000/workouts/${workouts._id}/day/${slug}/exercise`,
-        {
-          exerciseId: exerciseName,
-          sets
-        }
+      // 🔥 call service
+      const res = await addExerciseToDay(
+        workouts._id,
+        slug,
+        exerciseName,
+        sets
       );
 
+      if (!res.success) {
+        console.log(res.message);
+        return;
+      }
+
+      // reset UI
       setModalVisible(false);
       setExerciseName('');
       setSetsInput('');
 
-      // 🔥 sync with backend
-      const userWorkouts = await axios.get(
-        "http://localhost:3000/workouts"
-      );
+      // 🔥 sync دوباره
+      const updated = await getWorkouts();
 
-      dispatch(setWorkoutMoves(userWorkouts.data[0]));
+      if (updated.success && updated.data?.length) {
+        dispatch(setWorkoutMoves(updated.data[0]));
+      }
 
     } catch (err) {
       console.log(err);

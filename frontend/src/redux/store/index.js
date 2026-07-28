@@ -26,7 +26,7 @@ const persistConfig = {
     key: "root",
     storage: AsyncStorage,
 
-    whitelist: ["sleeping", "user", "workouts", "diet", "blogs"]
+    whitelist: ["blogs"]
 };
 
 // persisted reducer

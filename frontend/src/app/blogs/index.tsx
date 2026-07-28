@@ -24,7 +24,7 @@ export default function Blogs() {
     const getBlogs = async () => {
 
         try {
-            const res = await axios.get("http://localhost:3000/blogs");
+            const res = await axios.get("https://gymie-mobile.onrender.com/blogs");
             setBlogs(res.data);
             dispatch(updateBlogs(res.data))
         } catch (err) {
@@ -35,6 +35,7 @@ export default function Blogs() {
     useEffect(() => {
         getBlogs();
     }, []);
+
 
     return (
         <View style={styles.page}>

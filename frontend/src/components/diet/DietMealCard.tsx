@@ -1,5 +1,9 @@
-import { addIngredientApi, removeIngredientApi, updateIngredientApi } from '@/api/dietApi';
 import { dietMealsStyles as styles } from '@/components/ui/diet-meals.styles';
+import {
+    addIngredient,
+    removeIngredient,
+    updateIngredient
+} from '@/services/diet.service';
 
 import {
     addIngredientLocal,
@@ -8,7 +12,6 @@ import {
 } from '@/redux/diet/dietSlice';
 
 import { useState } from 'react';
-
 import {
     Pressable,
     Text,
@@ -27,7 +30,6 @@ type Props = {
 };
 
 
-
 export default function DietMealCard({
     meal,
     dayIndex,
@@ -36,8 +38,8 @@ export default function DietMealCard({
 }: Props) {
 
 
-
     const dispatch = useDispatch();
+
 
     const [open, setOpen] = useState(false);
 
@@ -45,28 +47,26 @@ export default function DietMealCard({
 
     const [editValue, setEditValue] = useState("");
 
+    const [activeIngredient, setActiveIngredient] = useState<number | null>(null);
+
+
 
     const mealTitle =
-
-        meal.mealName === 'breakfast'
-
-            ? 'صبحانه'
-
-            :
-
-            meal.mealName === 'lunch'
-
-                ? 'ناهار'
-
-                :
-
-                'شام';
+        meal.mealName === "breakfast"
+            ? "صبحانه"
+            : meal.mealName === "lunch"
+                ? "ناهار"
+                : "شام";
 
 
-    const addIngredient = async () => {
-        
+
+    // ➕ افزودن ماده غذایی
+    const handleAddIngredient = async () => {
+
         const newIngredient = `ماده ${meal.ingredients.length + 1}`;
-        // redux (optimistic)
+
+
+        // optimistic update
         dispatch(
             addIngredientLocal({
                 dayIndex,
@@ -75,25 +75,48 @@ export default function DietMealCard({
             })
         );
 
+
         try {
-            await addIngredientApi(
+
+            await addIngredient(
                 dietId,
                 dayIndex,
                 meal.mealName,
                 newIngredient
             );
-        } catch (e) {
-            console.log("ADD ERROR", e);
+
+
+        } catch (error) {
+
+            console.log("ADD INGREDIENT ERROR:", error);
+
         }
+
     };
 
-    const startEdit = (index: number, value: string) => {
+
+
+    // ✏️ شروع ویرایش
+    const startEdit = (
+        index: number,
+        value: string
+    ) => {
+
         setEditingIndex(index);
+
         setEditValue(value);
+
         setActiveIngredient(null);
+
     };
 
-    const confirmEdit = async (index: number) => {
+
+
+    // ✅ تایید ویرایش
+    const confirmEdit = async (
+        index: number
+    ) => {
+
 
         dispatch(
             updateIngredientLocal({
@@ -104,26 +127,43 @@ export default function DietMealCard({
             })
         );
 
+
         try {
-            await updateIngredientApi(
+
+            await updateIngredient(
                 dietId,
                 dayIndex,
                 meal.mealName,
                 index,
                 editValue
             );
-        } catch (e) {
-            console.log("UPDATE ERROR", e);
+
+
+        } catch (error) {
+
+            console.log("UPDATE INGREDIENT ERROR:", error);
+
         }
 
+
         setEditingIndex(null);
+
         setEditValue("");
+
         setActiveIngredient(null);
+
     };
 
-    const removeIngredient = async (index: number) => {
+
+
+    // 🗑 حذف ماده غذایی
+    const handleRemoveIngredient = async (
+        index: number
+    ) => {
+
 
         setActiveIngredient(null);
+
 
         dispatch(
             removeIngredientLocal({
@@ -133,36 +173,39 @@ export default function DietMealCard({
             })
         );
 
+
         try {
-            await removeIngredientApi(
+
+            await removeIngredient(
                 dietId,
                 dayIndex,
                 meal.mealName,
                 index
             );
-        } catch (e) {
-            console.log("DELETE ERROR", e);
-        }
-    };
 
 
-    // buttons modal
-    const [activeIngredient, setActiveIngredient] = useState<number | null>(null);
+        } catch (error) {
 
-    const toggleActions = (index: number) => {
-
-        if (activeIngredient === index) {
-
-            setActiveIngredient(null);
-
-        } else {
-
-            setActiveIngredient(index);
+            console.log("REMOVE INGREDIENT ERROR:", error);
 
         }
 
     };
 
+
+
+    // باز و بسته کردن دکمه‌ها
+    const toggleActions = (
+        index: number
+    ) => {
+
+        setActiveIngredient(
+            activeIngredient === index
+                ? null
+                : index
+        );
+
+    };
 
     return (
 
@@ -313,7 +356,7 @@ export default function DietMealCard({
                                                                     style={styles.deleteButton}
 
                                                                     onPress={() =>
-                                                                        removeIngredient(index)
+                                                                        handleRemoveIngredient  (index)
                                                                     }
 
                                                                 >
@@ -350,7 +393,7 @@ export default function DietMealCard({
 
                             style={styles.addButton}
 
-                            onPress={addIngredient}
+                            onPress={handleAddIngredient}
 
                         >
 

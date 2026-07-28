@@ -1,6 +1,6 @@
 import { workoutPageStyles as styles } from '@/components/ui/workout-page.styles';
 import { setWorkoutMoves } from '@/redux/workouts/workoutsSlice';
-import axios from 'axios';
+import { getWorkouts } from '@/services/workouts.service'; // ✅
 import { useRouter } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import {
@@ -18,29 +18,28 @@ export default function Workout() {
   const dispatch = useDispatch();
   const hasFetched = useRef(false);
 
-  const BASE_URL = "http://localhost:3000";
-
   useEffect(() => {
 
     if (hasFetched.current) return;
 
-    const getWorkouts = async () => {
+    const fetchWorkouts = async () => {
+      const result = await getWorkouts();
 
-      try {
+      if (result.success && result.data?.length) {
 
-        const res = await axios.get(`${BASE_URL}/workouts`);
+        dispatch(setWorkoutMoves(result.data[0]));
 
-        if (res.data?.length) {
+      } else {
 
-          dispatch(setWorkoutMoves(res.data[0]));
-        }
+        console.log(
+          "WORKOUT FETCH ERROR:",
+          "message" in result ? result.message : "خطای نامشخص"
+        );
 
-      } catch (err) {
-        console.log("WORKOUT FETCH ERROR:", err);
       }
     };
 
-    getWorkouts();
+    fetchWorkouts();
     hasFetched.current = true;
 
   }, []);
@@ -53,7 +52,6 @@ export default function Workout() {
   const workouts = useSelector((state: any) => state.workouts);
 
   return (
-
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.page}>
 
