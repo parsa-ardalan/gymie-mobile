@@ -1,6 +1,7 @@
 import { workoutPlanStyles as styles } from '@/components/ui/workout-plan.styles';
 import { setWorkoutMoves, toggleDoneLocal } from '@/redux/workouts/workoutsSlice';
 import { addExerciseToDay, getWorkouts } from '@/services/workouts.service'; // ✅ اینجا
+import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -154,9 +155,12 @@ export default function Plan() {
                         )
                       }}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={styles.successDoneIcon}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                      </svg>
+                      <Ionicons
+                        name="checkmark-circle"
+                        size={24}
+                        color="currentColor"
+                        style={styles.successDoneIcon}
+                      />
                     </Pressable>
                   )
                 }
@@ -172,11 +176,11 @@ export default function Plan() {
             onPress={() => setModalVisible(true)}
             style={styles.addButton}
           >
-
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={styles.addButtonText}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-
+            <Ionicons
+              name="add"
+              size={20}
+              color="#09ff00ff"
+            />
           </Pressable>
 
         </View>

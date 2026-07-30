@@ -30,7 +30,6 @@ export default function Sleeping() {
     );
 
 
-
     // 📥 دریافت خواب
     useEffect(() => {
 
@@ -60,8 +59,6 @@ export default function Sleeping() {
         fetchSleeping();
 
     }, []);
-
-
 
     const calculateSleepHours = () => {
 
@@ -100,13 +97,8 @@ export default function Sleeping() {
 
     };
 
-
-
     const sleepHours = calculateSleepHours();
-
     const progress = sleepHours / 24;
-
-
 
     // 🛏 تغییر ساعت خواب
     const editBedTime = async (
@@ -141,8 +133,6 @@ export default function Sleeping() {
 
     };
 
-
-
     // 🌅 تغییر ساعت بیداری
     const editWakeTime = async (
         value: string
@@ -175,8 +165,6 @@ export default function Sleeping() {
         }
 
     };
-
-
 
     return (
 
@@ -285,13 +273,9 @@ export default function Sleeping() {
             </View>
 
 
-
-
             <View style={styles.circleWrapper}>
 
-
                 <Svg width={220} height={220}>
-
 
                     <Circle
                         cx="110"
@@ -301,8 +285,6 @@ export default function Sleeping() {
                         strokeWidth={10}
                         fill="transparent"
                     />
-
-
 
                     <Circle
                         cx="110"
@@ -323,7 +305,6 @@ export default function Sleeping() {
                 </Svg>
 
 
-
                 <View style={styles.circleText}>
 
                     <Text style={styles.circleValue}>
@@ -337,9 +318,7 @@ export default function Sleeping() {
 
                 </View>
 
-
             </View>
-
 
         </View>
 

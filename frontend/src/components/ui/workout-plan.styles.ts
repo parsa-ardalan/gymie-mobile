@@ -133,29 +133,23 @@ export const workoutPlanStyles = StyleSheet.create({
 
     //Add Button
     addButton: {
-
         height: 48,
         width: 48,
-        borderRadius: '100%',
+        borderRadius: 24,
 
-        display: "flex",
         alignItems: 'center',
         justifyContent: 'center',
 
         marginTop: 24,
 
         shadowColor: '#09ff00ff',
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
+        shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.25,
         shadowRadius: 2,
         elevation: 2,
     },
 
     addButtonText: {
-        width: 20, height: 20,
         color: '#09ff00ff',
     },
 

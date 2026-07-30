@@ -11,12 +11,13 @@ import {
     View,
 } from "react-native";
 
-import Svg, { Path } from "react-native-svg";
+import { Ionicons } from "@expo/vector-icons";
 
 import styles from "@/components/ui/coach-page.styles";
 import botanswers from "@/data/chat/botanswers.json";
 
 export default function Coach() {
+
     const [messages, setMessages] = useState([
         { id: 1, sender: "user", content: "جیمی آنلاینه.. باهاش چت کن" },
         {
@@ -67,7 +68,7 @@ export default function Coach() {
         }, 700);
     };
 
-    const renderItem = ({ item }) => {
+    const renderItem = ({ item }: any) => {
         const isUser = item.sender === "user";
 
         return (
@@ -106,15 +107,7 @@ export default function Coach() {
 
                 <View style={styles.headerSide}>
                     <Pressable style={styles.backBtn} onPress={handleBack}>
-                        <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
-                            <Path
-                                d="M15.75 19.5 8.25 12l7.5-7.5"
-                                stroke="white"
-                                strokeWidth={1.5}
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            />
-                        </Svg>
+                        <Ionicons name="arrow-back" size={18} color="white" />
                     </Pressable>
                 </View>
             </View>
@@ -144,15 +137,7 @@ export default function Coach() {
                 </View>
 
                 <Pressable style={styles.sendBtn} onPress={sendMessage}>
-                    <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
-                        <Path
-                            d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                            stroke="white"
-                            strokeWidth={1.5}
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </Svg>
+                    <Ionicons name="send" size={16} color="white" />
                 </Pressable>
             </View>
         </KeyboardAvoidingView>
