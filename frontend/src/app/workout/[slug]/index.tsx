@@ -1,6 +1,7 @@
 import { workoutPlanStyles as styles } from '@/components/ui/workout-plan.styles';
+import { addPercent } from '@/redux/percent/percentSlice';
 import { setWorkoutMoves, toggleDoneLocal } from '@/redux/workouts/workoutsSlice';
-import { addExerciseToDay, getWorkouts } from '@/services/workouts.service'; // ✅ اینجا
+import { addExerciseToDay, getWorkouts } from '@/services/workouts.service';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
@@ -23,13 +24,19 @@ export default function Plan() {
   const dayIndex = Number(slug);
   const workoutList = workouts.days?.[dayIndex]?.exercises || [];
 
+  // percent codes
+  const weekPercent = useSelector((state: any) => state.percent);
+  const dayPercent = weekPercent[slug];
+  const movePercent = workoutList.length > 0 ? 100 / workoutList.length : 0;
+
+
   // modal
   const [modalVisible, setModalVisible] = useState(false);
   const [exerciseName, setExerciseName] = useState('');
   const [setsInput, setSetsInput] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // ✅ فقط این تابع عوض شد
+  // functions
   const addNewMove = async () => {
 
     try {
@@ -69,6 +76,24 @@ export default function Plan() {
     }
   };
 
+  const checkMove = (item: any, index: number) => {
+
+    // check move
+    dispatch(toggleDoneLocal({
+      dayIndex,
+      exerciseIndex: index
+    }))
+
+    // add day percent
+    dispatch(addPercent({
+      dayIndex: parseInt(slug),
+      percentNumber: movePercent
+    }))
+
+    console.log(workoutList)
+
+  }
+
 
   return (
 
@@ -79,14 +104,14 @@ export default function Plan() {
           {/* Progress */}
           <View style={styles.percentBox}>
             <Text style={styles.percentNumberText}>
-              30%
+              {dayPercent.percentage}%
             </Text>
 
             <View style={styles.percentBarBackground}>
               <View
                 style={[
                   styles.percentBarFill,
-                  { width: `${30}%` },
+                  { width: `${dayPercent.percentage}%` },
                 ]}
               />
             </View>
@@ -128,15 +153,7 @@ export default function Plan() {
 
                     <Pressable
                       style={styles.doneButton}
-                      onPress={() => {
-                        dispatch(
-                          toggleDoneLocal({
-                            dayIndex,
-                            exerciseIndex: index
-                          })
-                        )
-                      }}
-                    >
+                      onPress={() => { checkMove(item, index) }}>
                       <Text style={styles.doneButtonText}>
                         اتمام حرکت
                       </Text>
@@ -146,14 +163,6 @@ export default function Plan() {
 
                     <Pressable
                       style={styles.successDoneButton}
-                      onPress={() => {
-                        dispatch(
-                          toggleDoneLocal({
-                            dayIndex,
-                            exerciseIndex: index
-                          })
-                        )
-                      }}
                     >
                       <Ionicons
                         name="checkmark-circle"
@@ -240,5 +249,6 @@ export default function Plan() {
       </Modal>
 
     </>
+
   );
 }

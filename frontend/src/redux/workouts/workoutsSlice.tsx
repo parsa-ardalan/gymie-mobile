@@ -38,7 +38,7 @@ const workoutsSlice = createSlice({
       const exercise = state.days?.[dayIndex]?.exercises?.[exerciseIndex];
 
       if (exercise) {
-        exercise.isDone = !exercise.isDone;
+        exercise.isDone = true;
       }
     },
 
@@ -55,7 +55,7 @@ const workoutsSlice = createSlice({
       state.days[dayIndex].exercises.push(exercise);
     },
   },
-  
+
 });
 
 export const {

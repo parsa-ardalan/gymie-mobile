@@ -6,6 +6,7 @@ import { persistReducer, persistStore } from "redux-persist";
 // import slices
 import userSlice from "../profile/profileSlice";
 
+import percentSlice from "@/redux/percent/percentSlice";
 import blogsSlice from "../blogs/blogsSlice";
 import dietSlice from "../diet/dietSlice";
 import sleepingSlice from "../sleeping/sleepingSlice";
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
     user: userSlice,
     sleeping: sleepingSlice,
     workouts: workoutsSlice,
+    percent: percentSlice,
     diet: dietSlice,
     blogs: blogsSlice
 });

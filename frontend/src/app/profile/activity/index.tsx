@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { Text, View } from "react-native";
 import { useSelector } from "react-redux";
 
@@ -7,112 +6,133 @@ import styles from "@/components/ui/activity-page.styles";
 export default function Activity() {
 
     const profile = useSelector((state: any) => state.user);
-    const weekday = useSelector((state: any) => state.weekday);
+    const weekPercent = useSelector((state: any) => state.percent);
     const sleepingSystem = useSelector((state: any) => state.sleeping);
 
-    // -------------------------
-    // workout calculation
-    // -------------------------
-    const workout = useMemo(() => {
-        if (!weekday?.length) return 0;
-
-        const total = weekday.reduce(
-            (sum: number, item: any) => sum + (item.activityPercent || 0),
-            0
-        );
-
-        return Math.round(total / weekday.length);
-    }, [weekday]);
 
     // -------------------------
-    // BMI calculation
+    // workout percentage
     // -------------------------
-    const bmi = useMemo(() => {
-        const h = profile.height / 100;
-        return profile.weight / (h * h);
-    }, [profile]);
-
-    const bodyForm = useMemo(() => {
-        if (bmi < 18.5) return "لاغر";
-        else if (bmi < 24.9) return "ایده آل";
-        else if (bmi < 29.9) return "تپل";
-        else return "چاق";
-    }, [bmi]);
-
-    // -------------------------
-    // sleeping calculation
-    // -------------------------
-    const sleeping = useMemo(() => {
-        const offered = sleepingSystem.offeredSleepingHour || 0;
-        const user = sleepingSystem.userSleepingHour || 0;
-
-        return offered < user ? "منظم" : "نامنظم";
-    }, [
-        sleepingSystem.offeredSleepingHour,
-        sleepingSystem.userSleepingHour
-    ]);
+    const workoutPercent = weekPercent?.length
+        ? Math.round(
+            weekPercent.reduce(
+                (sum: number, day: any) =>
+                    sum + (day.percentage || 0),
+                0
+            ) / weekPercent.length
+        )
+        : 0;
 
 
     // -------------------------
-    // activity info
+    // BMI
     // -------------------------
-    const activityInfo = useMemo(() => {
-        return {
-            workout,
-            sleeping,
-            bodyForm,
-        };
-    }, [workout, sleeping, bodyForm]);
+    const height = profile?.height || 0;
+    const weight = profile?.weight || 0;
+
+    const bmi = height > 0
+        ? weight / Math.pow(height / 100, 2)
+        : 0;
+
+
+    const bodyForm =
+        bmi === 0
+            ? "-"
+            : bmi < 18.5
+                ? "لاغر"
+                : bmi < 24.9
+                    ? "ایده آل"
+                    : bmi < 29.9
+                        ? "تپل"
+                        : "چاق";
+
 
     // -------------------------
-    // UI
+    // Sleep
     // -------------------------
+
+    const offeredSleepingHour = 8
+
+    const userSleepHour =
+        (sleepingSystem?.sleepDuration || 0) / 60;
+
+
+    const sleeping =
+        userSleepHour >= offeredSleepingHour
+            ? "منظم"
+            : "نامنظم";
+
     return (
         <View style={styles.page}>
 
-            {/* chart */}
+            {/* Chart */}
             <View style={styles.chart}>
-                {weekday.map((day: any) => (
-                    <View style={styles.day} key={day.id}>
+
+                {weekPercent.map((day: any) => (
+
+                    <View
+                        style={styles.day}
+                        key={day.day}
+                    >
+
                         <View style={styles.barWrapper}>
                             <View
                                 style={[
                                     styles.bar,
-                                    { height: `${day.activityPercent}%` },
+                                    {
+                                        height: `${day.percentage}%`
+                                    },
                                 ]}
                             />
                         </View>
 
+
                         <Text style={styles.dayText}>
-                            {day.planfilename}
+                            {day.day}
                         </Text>
+
                     </View>
+
                 ))}
+
             </View>
 
-            {/* workout */}
+
+            {/* Workout */}
             <View style={styles.card}>
-                <Text style={styles.leftText}>تمرین</Text>
+                <Text style={styles.leftText}>
+                    تمرین
+                </Text>
+
                 <Text style={styles.rightGreen}>
-                    {activityInfo.workout}%
+                    {workoutPercent}%
                 </Text>
             </View>
 
-            {/* body form */}
+
+            {/* Body */}
             <View style={styles.card}>
-                <Text style={styles.leftText}>فرم بدنی</Text>
+                <Text style={styles.leftText}>
+                    فرم بدنی
+                </Text>
+
                 <Text style={styles.rightGreen}>
-                    {activityInfo.bodyForm}
+                    {bodyForm}
                 </Text>
             </View>
 
-            {/* sleep */}
+
+            {/* Sleep */}
             <View style={styles.card}>
-                <Text style={styles.leftText}>خواب</Text>
+                <Text style={styles.leftText}>
+                    خواب
+                </Text>
+
                 <Text style={styles.rightGreen}>
-                    {activityInfo.sleeping}
+                    {sleeping}
                 </Text>
             </View>
+
 
         </View>
     );
