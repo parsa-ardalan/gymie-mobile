@@ -1,4 +1,5 @@
 import { homePageStyles as styles } from '@/components/ui/home-page.styles';
+import GetAPI from "@/utils/GetAPI";
 import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
 import { Image, Pressable, ScrollView, Text, View } from 'react-native';
@@ -18,6 +19,7 @@ type ActivityItem = {
 };
 
 export default function HomePage() {
+
   const router = useRouter();
 
   const welcomeText = [
@@ -80,90 +82,95 @@ export default function HomePage() {
 
   return (
 
-    <ScrollView
-      contentContainerStyle={styles.page}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.welcomeContainer}>
-        <View style={styles.logoSection}>
-          <Image
-            source={require('@/assets/icons/logo.png')}
-            style={styles.logo}
-            resizeMode="contain"
-          />
+    <>
+
+      <GetAPI />
+
+      <ScrollView
+        contentContainerStyle={styles.page}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.welcomeContainer}>
+          <View style={styles.logoSection}>
+            <Image
+              source={require('@/assets/icons/logo.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </View>
+
+          <View style={styles.titleSection}>
+            <Text style={styles.title}>سلام! خوش اومدی</Text>
+            <Text style={styles.subtitle}>{welcomeText[randomIndex]}</Text>
+          </View>
         </View>
 
-        <View style={styles.titleSection}>
-          <Text style={styles.title}>سلام! خوش اومدی</Text>
-          <Text style={styles.subtitle}>{welcomeText[randomIndex]}</Text>
+        <View style={styles.highlightsContainer}>
+          {highlights.map((item) => (
+            <Pressable
+              key={item.id}
+              style={styles.highlightItem}
+              onPress={() => handleNavigate(item.url)}
+            >
+              <View style={styles.highlightIconWrapper}>
+                <Image
+                  source={item.icon}
+                  style={styles.highlightIcon}
+                  resizeMode="contain"
+                />
+              </View>
+            </Pressable>
+          ))}
         </View>
-      </View>
 
-      <View style={styles.highlightsContainer}>
-        {highlights.map((item) => (
-          <Pressable
-            key={item.id}
-            style={styles.highlightItem}
-            onPress={() => handleNavigate(item.url)}
-          >
-            <View style={styles.highlightIconWrapper}>
-              <Image
-                source={item.icon}
-                style={styles.highlightIcon}
-                resizeMode="contain"
-              />
-            </View>
-          </Pressable>
-        ))}
-      </View>
+        <View style={styles.activitySection}>
+          {activity.map((tab) => (
+            <Pressable
+              key={tab.id}
+              style={styles.activityCard}
+              onPress={() => handleNavigate(tab.href)}
+            >
+              <View style={styles.activityCardContent}>
+                <View style={styles.activityIconContainer}>
+                  <Image
+                    source={tab.icon}
+                    style={styles.activityIcon}
+                    resizeMode="contain"
+                  />
+                </View>
 
-      <View style={styles.activitySection}>
-        {activity.map((tab) => (
+                <View style={styles.activityTitleContainer}>
+                  <Text style={styles.activityTitle} numberOfLines={1}>
+                    {tab.name}
+                  </Text>
+                </View>
+              </View>
+            </Pressable>
+          ))}
+
           <Pressable
-            key={tab.id}
-            style={styles.activityCard}
-            onPress={() => handleNavigate(tab.href)}
+            style={styles.aiCoachCard}
+            onPress={() => handleNavigate('/coach')}
           >
             <View style={styles.activityCardContent}>
               <View style={styles.activityIconContainer}>
                 <Image
-                  source={tab.icon}
+                  source={require('@/assets/icons/chat.png')}
                   style={styles.activityIcon}
                   resizeMode="contain"
                 />
               </View>
 
               <View style={styles.activityTitleContainer}>
-                <Text style={styles.activityTitle} numberOfLines={1}>
-                  {tab.name}
+                <Text style={styles.aiCoachTitle} numberOfLines={1}>
+                  مربی هوش مصنوعی
                 </Text>
               </View>
             </View>
           </Pressable>
-        ))}
+        </View>
 
-        <Pressable
-          style={styles.aiCoachCard}
-          onPress={() => handleNavigate('/coach')}
-        >
-          <View style={styles.activityCardContent}>
-            <View style={styles.activityIconContainer}>
-              <Image
-                source={require('@/assets/icons/chat.png')}
-                style={styles.activityIcon}
-                resizeMode="contain"
-              />
-            </View>
-
-            <View style={styles.activityTitleContainer}>
-              <Text style={styles.aiCoachTitle} numberOfLines={1}>
-                مربی هوش مصنوعی
-              </Text>
-            </View>
-          </View>
-        </Pressable>
-      </View>
-
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 }

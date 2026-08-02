@@ -9,7 +9,7 @@ export class DietService {
   constructor(
     @InjectModel(Diet.name)
     private readonly dietModel: Model<DietDocument>
-  ) {}
+  ) { }
 
 
   // ساخت diet برای کاربر
@@ -37,13 +37,6 @@ export class DietService {
 
     return diet.save()
   }
-
-
-  // گرفتن همه diet ها
-  async getAll() {
-    return this.dietModel.find()
-  }
-
 
   // گرفتن diet با user_id
   async getByUserId(userId: string) {
@@ -149,9 +142,6 @@ export class DietService {
 
     return diet
   }
-
-
-
 
   // حذف ingredient
   async removeIngredient(

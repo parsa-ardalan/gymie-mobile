@@ -1,8 +1,5 @@
 import { dietPageStyles as styles } from '@/components/ui/diet-page.styles';
-import { setDiet } from '@/redux/diet/dietSlice';
-import axios from 'axios';
 import { useRouter } from 'expo-router';
-import { useEffect, useRef } from 'react';
 import {
   Image,
   Pressable,
@@ -10,51 +7,12 @@ import {
   Text,
   View
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 
 export default function Diet() {
 
   const router = useRouter();
-  const dispatch = useDispatch();
-  const hasFetched = useRef(false);
-
-  const BASE_URL = "https://gymie-mobile.onrender.com";
-
-  useEffect(() => {
-
-    if (hasFetched.current) return;
-
-    const getDiet = async () => {
-
-      try {
-
-        const res = await axios.get(`${BASE_URL}/diet`);
-
-
-        if (res.data?.length) {
-
-          dispatch(setDiet(res.data[0]));
-
-        }
-
-
-      } catch (err) {
-
-        console.log("DIET FETCH ERROR:", err);
-
-      }
-
-    };
-
-
-    getDiet();
-    hasFetched.current = true;
-
-
-  }, []);
-
-
 
   const daysName = [
     'شنبه',

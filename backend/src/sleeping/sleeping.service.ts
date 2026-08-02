@@ -18,6 +18,7 @@ export class SleepingService {
     userId: string,
     sleepingId: string,
   ) {
+
     return this.model.create({
 
       _id: sleepingId,
@@ -31,15 +32,18 @@ export class SleepingService {
       sleepDuration: 480,
 
     });
+
   }
 
 
-  // گرفتن اطلاعات خواب
+  // گرفتن اطلاعات خواب کاربر
   async getByUser(userId: string) {
 
-    const sleeping = await this.model.findOne({
-      user_id: userId,
-    });
+    const sleeping = await this.model
+      .findOne({
+        user_id: userId,
+      })
+      .lean();
 
     return sleeping;
 
@@ -94,12 +98,9 @@ export class SleepingService {
         returnDocument: 'after',
       },
     );
+
   }
 
-  // گرفتن تمام sleeping ها
-  async findAll() {
-    return this.model.find();
-  }
 
   // محاسبه مدت خواب بر حسب دقیقه
   private calculateDuration(
@@ -135,6 +136,7 @@ export class SleepingService {
 
 
     return duration;
+
   }
 
 }

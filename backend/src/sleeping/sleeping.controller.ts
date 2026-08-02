@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Query } from '@nestjs/common';
 import { SleepingService } from './sleeping.service';
 
 @Controller('sleeping')
@@ -9,10 +9,15 @@ export class SleepingController {
   ) {}
 
 
-  // نمایش تمام sleeping ها
+  // گرفتن sleeping کاربر
+  // GET /sleeping?user_id=u1
   @Get()
-  findAll() {
-    return this.service.findAll();
+  getSleeping(
+    @Query('user_id') user_id: string
+  ) {
+
+    return this.service.getByUser(user_id);
+
   }
 
 

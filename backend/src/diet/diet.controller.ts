@@ -5,7 +5,8 @@ import {
     Post,
     Body,
     Patch,
-    Delete
+    Delete,
+    Query
 } from '@nestjs/common'
 
 import { DietService } from './diet.service'
@@ -19,18 +20,19 @@ export class DietController {
     ) { }
 
 
-
-    // GET /diet
+    // GET /diet?user_id=u1
     @Get()
-    async getAllDiet() {
-        return this.dietService.getAll()
+    async getUserDiet(
+        @Query('user_id') user_id: string
+    ) {
+        return this.dietService.getByUserId(user_id)
     }
 
 
 
     // GET /diet/u1
     @Get(':userId')
-    async getUserDiet(
+    async getUserDietByParam(
         @Param('userId') userId: string
     ) {
         return this.dietService.getByUserId(userId)
@@ -38,8 +40,6 @@ export class DietController {
 
 
 
-
-    // POST /diet/d1/day/0/meal/breakfast/ingredient
     @Post(':id/day/:dayOfWeek/meal/:mealName/ingredient')
     async addIngredient(
 
@@ -66,8 +66,6 @@ export class DietController {
 
 
 
-
-    // PATCH /diet/d1/day/0/meal/breakfast/ingredient/0
     @Patch(':id/day/:dayOfWeek/meal/:mealName/ingredient/:index')
     async updateIngredient(
 
@@ -94,7 +92,8 @@ export class DietController {
         )
     }
 
-    // DELETE /diet/d1/day/0/meal/breakfast/ingredient/0
+
+
     @Delete(':id/day/:dayOfWeek/meal/:mealName/ingredient/:index')
     async removeIngredient(
 

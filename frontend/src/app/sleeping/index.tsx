@@ -2,24 +2,13 @@ import { Text, TextInput, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
 import styles from "@/components/ui/sleeping-page.styles";
-
-import {
-    updateSleeping as updateSleepingRedux
-} from "@/redux/sleeping/sleepingSlice";
-
-import {
-    getSleeping,
-    updateSleeping as updateSleepingApi
-} from "@/services/sleeping.service";
-
-import { useEffect } from "react";
+import { updateSleeping as updateSleepingRedux } from "@/redux/sleeping/sleepingSlice";
+import { updateSleeping as updateSleepingApi } from "@/services/sleeping.service";
 import { useDispatch, useSelector } from "react-redux";
-
 
 export default function Sleeping() {
 
     const dispatch = useDispatch();
-
 
     const radius = 90;
     const circumference = 2 * Math.PI * radius;
@@ -28,37 +17,6 @@ export default function Sleeping() {
     const sleepingRedux = useSelector(
         (state: any) => state.sleeping
     );
-
-
-    // 📥 دریافت خواب
-    useEffect(() => {
-
-        const fetchSleeping = async () => {
-
-            const result = await getSleeping();
-
-
-            if (result.success) {
-
-                dispatch(
-                    updateSleepingRedux(result.data)
-                );
-
-            } else {
-
-                console.log(
-                    "GET sleeping error:",
-                    result.message
-                );
-
-            }
-
-        };
-
-
-        fetchSleeping();
-
-    }, []);
 
     const calculateSleepHours = () => {
 
