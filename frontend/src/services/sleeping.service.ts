@@ -1,7 +1,15 @@
+// services/sleeping.service.ts
+
 import axios from "axios";
+
 
 const BASE_URL = "https://gymie-mobile.onrender.com";
 
+
+
+// =====================
+// Types
+// =====================
 
 type ErrorResponse = {
     success: false;
@@ -9,36 +17,42 @@ type ErrorResponse = {
 };
 
 
-type SuccessResponse = {
+type SuccessResponse<T> = {
     success: true;
-    data: any;
+    data: T;
 };
 
 
 export type SleepingResponse =
-    | SuccessResponse
+    | SuccessResponse<any>
     | ErrorResponse;
 
 
 
-// 📥 گرفتن اطلاعات خواب
-export const getSleeping = async (): Promise<SleepingResponse> => {
+
+// =====================
+// GET USER SLEEPING
+// =====================
+
+export const getSleeping = async (
+    user_id: string
+): Promise<SleepingResponse> => {
 
     try {
 
         const res = await axios.get(
-            `${BASE_URL}/sleeping`
+            `${BASE_URL}/sleeping`,
+            {
+                params: {
+                    user_id,
+                },
+            }
         );
-
-
-        const data = Array.isArray(res.data)
-            ? res.data[0]
-            : res.data;
 
 
         return {
             success: true,
-            data
+            data: res.data,
         };
 
 
@@ -46,7 +60,7 @@ export const getSleeping = async (): Promise<SleepingResponse> => {
 
         return {
             success: false,
-            message: "خطا در دریافت اطلاعات خواب"
+            message: "خطا در دریافت اطلاعات خواب",
         };
 
     }
@@ -55,7 +69,11 @@ export const getSleeping = async (): Promise<SleepingResponse> => {
 
 
 
-// ✏️ آپدیت ساعت خواب / بیداری
+
+// =====================
+// UPDATE SLEEPING
+// =====================
+
 export const updateSleeping = async (
     user_id: string,
     data: {
@@ -70,14 +88,14 @@ export const updateSleeping = async (
             `${BASE_URL}/sleeping`,
             {
                 user_id,
-                ...data
+                ...data,
             }
         );
 
 
         return {
             success: true,
-            data: res.data
+            data: res.data,
         };
 
 
@@ -85,7 +103,7 @@ export const updateSleeping = async (
 
         return {
             success: false,
-            message: "خطا در بروزرسانی خواب"
+            message: "خطا در بروزرسانی خواب",
         };
 
     }

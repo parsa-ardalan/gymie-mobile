@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { setWorkoutMoves } from '@/redux/workouts/workoutsSlice';
 import { getWorkouts } from '@/services/workouts.service';
@@ -10,10 +10,13 @@ import { getDiet } from '@/services/diet.service';
 import { updateSleepingRedux } from "@/redux/sleeping/sleepingSlice";
 import { getSleeping } from "@/services/sleeping.service";
 
+
 export default function GetAPI() {
 
-    const hasFetched = useRef(false);
     const dispatch = useDispatch();
+
+    const user = useSelector(state => state.user);
+
 
     useEffect(() => {
 
@@ -21,41 +24,107 @@ export default function GetAPI() {
 
             try {
 
-                const [workouts, diet, sleeping] = await Promise.all([
-                    getWorkouts(),
-                    getDiet(),
-                    getSleeping(),
+                if (!user?._id) return;
+
+
+                const user_id = user._id;
+
+
+                const [
+                    workouts,
+                    diet,
+                    sleeping
+                ] = await Promise.all([
+
+                    getWorkouts(user_id),
+
+                    getDiet(user_id),
+
+                    getSleeping(user_id),
+
                 ]);
 
-                // 🟡 logs
-                console.log("WORKOUTS:", workouts.data);
-                console.log("DIET:", diet.data);
-                console.log("SLEEPING:", sleeping.data);
 
-                // 🟢 workouts
-                if (workouts.success && workouts.data?.length) {
-                    dispatch(setWorkoutMoves(workouts.data));
+                // logs
+                console.log(
+                    "WORKOUTS:",
+                    workouts.data
+                );
+
+                console.log(
+                    "DIET:",
+                    diet.data
+                );
+
+                console.log(
+                    "SLEEPING:",
+                    sleeping.data
+                );
+
+
+
+                // workouts
+                if (
+                    workouts.success &&
+                    workouts.data?.length
+                ) {
+
+                    dispatch(
+                        setWorkoutMoves(
+                            workouts.data
+                        )
+                    );
+
                 }
 
-                // 🟢 diet
-                if (diet.success && diet.data?.length) {
-                    dispatch(setDiet(diet.data));
+
+                // diet
+                if (
+                    diet.success &&
+                    diet.data
+                ) {
+
+                    dispatch(
+                        setDiet(
+                            diet.data
+                        )
+                    );
+
                 }
 
-                // 🟢 sleeping
-                if (sleeping.success) {
-                    dispatch(updateSleepingRedux(sleeping.data));
+
+                // sleeping
+                if (
+                    sleeping.success &&
+                    sleeping.data
+                ) {
+
+                    dispatch(
+                        updateSleepingRedux(
+                            sleeping.data
+                        )
+                    );
+
                 }
+
 
             } catch (error) {
-                console.log("GET API ERROR:", error);
+
+                console.log(
+                    "GET API ERROR:",
+                    error
+                );
+
             }
 
         };
 
+
         fetchData();
 
-    }, []);
+
+    }, [user?._id]);
+
 
     return null;
 }

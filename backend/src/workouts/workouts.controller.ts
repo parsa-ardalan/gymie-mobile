@@ -74,9 +74,6 @@ export class WorkoutsController {
 
   }
 
-
-
-
   // PATCH /workouts/:id/day/:dayOfWeek/exercise/:index/toggle
   @Patch(':id/day/:dayOfWeek/exercise/:index/toggle')
   toggleExercise(

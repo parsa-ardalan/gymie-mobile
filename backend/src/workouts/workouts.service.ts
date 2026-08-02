@@ -28,7 +28,7 @@ export class WorkoutsService {
 
 
         const workouts = await this.workoutModel
-            .find({
+            .findOne({
                 user_id
             })
             .lean();
