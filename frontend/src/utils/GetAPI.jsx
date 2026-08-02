@@ -7,7 +7,7 @@ import { getWorkouts } from '@/services/workouts.service';
 import { setDiet } from '@/redux/diet/dietSlice';
 import { getDiet } from '@/services/diet.service';
 
-import { updateSleepingRedux } from "@/redux/sleeping/sleepingSlice";
+import { updateSleeping } from "@/redux/sleeping/sleepingSlice";
 import { getSleeping } from "@/services/sleeping.service";
 
 
@@ -16,7 +16,6 @@ export default function GetAPI() {
     const dispatch = useDispatch();
 
     const user = useSelector(state => state.user);
-
 
     useEffect(() => {
 
@@ -100,7 +99,7 @@ export default function GetAPI() {
                 ) {
 
                     dispatch(
-                        updateSleepingRedux(
+                        updateSleeping(
                             sleeping.data
                         )
                     );
@@ -119,9 +118,7 @@ export default function GetAPI() {
 
         };
 
-
         fetchData();
-
 
     }, [user?._id]);
 
