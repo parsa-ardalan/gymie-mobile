@@ -1,10 +1,10 @@
 import { workoutPlanStyles as styles } from '@/components/ui/workout-plan.styles';
 import { addPercent } from '@/redux/percent/percentSlice';
-import { setWorkoutMoves, toggleDoneLocal } from '@/redux/workouts/workoutsSlice';
-import { addExerciseToDay, getWorkouts } from '@/services/workouts.service';
+import { setWorkoutMoves } from '@/redux/workouts/workoutsSlice';
+import { addExerciseToDay, getWorkouts, toggleExercise } from '@/services/workouts.service';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Modal,
   Pressable,
@@ -47,7 +47,7 @@ export default function Plan() {
       // 🔥 call service
       const res = await addExerciseToDay(
         workouts._id,
-        slug,
+        parseInt(slug),
         exerciseName,
         sets
       );
@@ -62,7 +62,7 @@ export default function Plan() {
       setExerciseName('');
       setSetsInput('');
 
-      // 🔥 sync دوباره
+      //sync 
       const updated = await getWorkouts();
 
       if (updated.success && updated.data?.length) {
@@ -76,23 +76,35 @@ export default function Plan() {
     }
   };
 
-  const checkMove = (item: any, index: number) => {
+  const checkMove = async (item: any, index: number) => {
 
-    // check move
-    dispatch(toggleDoneLocal({
+    // request to backend
+    const res = await toggleExercise(
+      workouts._id,
       dayIndex,
-      exerciseIndex: index
-    }))
+      index
+    );
+
+    if (!res.success) {
+      console.log(res.message);
+      return;
+    }
+
 
     // add day percent
     dispatch(addPercent({
       dayIndex: parseInt(slug),
       percentNumber: movePercent
-    }))
+    }));
 
-    console.log(workoutList)
+  };
 
-  }
+  useEffect(() => {
+    console.log(
+      "WORKOUT UPDATED:",
+      workouts.days?.[dayIndex]?.exercises
+    );
+  }, [workouts]);
 
 
   return (

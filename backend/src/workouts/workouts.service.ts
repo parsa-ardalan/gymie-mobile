@@ -14,7 +14,7 @@ export class WorkoutsService {
     constructor(
         @InjectModel(Workout.name)
         private readonly workoutModel: Model<WorkoutDocument>,
-    ) {}
+    ) { }
 
 
     // Get workouts by user
@@ -114,16 +114,15 @@ export class WorkoutsService {
 
 
     // Toggle exercise
+    // Toggle exercise
     async toggleExercise(
         workoutId: string,
         dayOfWeek: number,
         exerciseIndex: number,
     ) {
 
-
         const path =
             `days.$.exercises.${exerciseIndex}.isDone`;
-
 
 
         const workout =
@@ -135,10 +134,8 @@ export class WorkoutsService {
                 },
 
                 {
-                    $bit: {
-                        [path]: {
-                            xor: 1
-                        }
+                    $set: {
+                        [path]: true
                     }
                 },
 
@@ -149,7 +146,6 @@ export class WorkoutsService {
             );
 
 
-
         if (!workout) {
 
             throw new NotFoundException(
@@ -158,10 +154,7 @@ export class WorkoutsService {
 
         }
 
-
         return workout;
 
     }
-
-
 }

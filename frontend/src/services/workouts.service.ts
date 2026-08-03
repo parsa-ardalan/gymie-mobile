@@ -27,7 +27,6 @@ export type WorkoutsResponse =
     | ErrorResponse;
 
 
-
 // =====================
 // GET USER WORKOUTS
 // =====================
@@ -47,7 +46,6 @@ export const getWorkouts = async (
             }
         );
 
-
         return {
             success: true,
             data: res.data,
@@ -62,9 +60,7 @@ export const getWorkouts = async (
         };
 
     }
-
 };
-
 
 
 // =====================
@@ -94,11 +90,8 @@ export const getWorkoutById = async (
             success: false,
             message: "خطا در دریافت ورک‌اوت",
         };
-
     }
-
 };
-
 
 
 // =====================
@@ -135,11 +128,9 @@ export const addExerciseToDay = async (
             success: false,
             message: "خطا در افزودن حرکت",
         };
-
     }
 
 };
-
 
 
 // =====================
@@ -173,5 +164,4 @@ export const toggleExercise = async (
         };
 
     }
-
 };

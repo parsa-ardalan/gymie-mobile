@@ -65,7 +65,7 @@ export default function GetAPI() {
                 // workouts
                 if (
                     workouts.success &&
-                    workouts.data?.length
+                    workouts.data
                 ) {
 
                     dispatch(
