@@ -165,3 +165,71 @@ export const toggleExercise = async (
 
     }
 };
+
+// =====================
+// EDIT EXERCISE
+// =====================
+
+export const editExercise = async (
+    workoutId: string,
+    dayOfWeek: number,
+    index: number,
+    exerciseId: string,
+    sets: number[]
+): Promise<WorkoutsResponse> => {
+
+    try {
+
+        const res = await axios.patch(
+            `${BASE_URL}/workouts/${workoutId}/day/${dayOfWeek}/exercise/${index}`,
+            {
+                exerciseId,
+                sets,
+            }
+        );
+
+        return {
+            success: true,
+            data: res.data,
+        };
+
+    } catch (error) {
+
+        return {
+            success: false,
+            message: "خطا در ویرایش حرکت",
+        };
+
+    }
+};
+
+// =====================
+// DELETE EXERCISE
+// =====================
+
+export const deleteExercise = async (
+    workoutId: string,
+    dayOfWeek: number,
+    index: number
+): Promise<WorkoutsResponse> => {
+
+    try {
+
+        const res = await axios.delete(
+            `${BASE_URL}/workouts/${workoutId}/day/${dayOfWeek}/exercise/${index}`
+        );
+
+        return {
+            success: true,
+            data: res.data,
+        };
+
+    } catch (error) {
+
+        return {
+            success: false,
+            message: "خطا در حذف حرکت",
+        };
+
+    }
+};

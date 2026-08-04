@@ -1,37 +1,54 @@
 import { workoutPlanStyles as styles } from '@/components/ui/workout-plan.styles';
 import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react';
 import {
-    Pressable,
-    Text,
-    View
+  Pressable,
+  Text,
+  View
 } from 'react-native';
 
 
 type Props = {
   item: any;
   index: number;
-  onDone: (index:number)=>void;
+  onDone: (index: number) => void;
+  onEdit: (index: number) => void;
+  onDelete: (index: number) => void;
 };
 
 
 export default function ExerciseCard({
   item,
   index,
-  onDone
+  onDone,
+  onEdit,
+  onDelete
 }: Props) {
+
+
+  const [showActions, setShowActions] = useState(false);
 
 
   return (
 
-    <View
+    <Pressable
 
       style={[
         styles.movementCard,
         item.isDone && styles.movementCardDone,
       ]}
 
-    >
+      onLongPress={() => setShowActions(true)}
 
+      delayLongPress={500}
+
+      onPress={() => {
+        if (showActions) {
+          setShowActions(false);
+        }
+      }}
+
+    >
 
       <Text style={styles.movementName}>
         {item.exerciseId}
@@ -50,8 +67,8 @@ export default function ExerciseCard({
 
           {
             item.sets.map(
-              (set:number, i:number)=>(
-                
+              (set: number, i: number) => (
+
                 <Text
                   key={i}
                   style={styles.setValueText}
@@ -64,7 +81,6 @@ export default function ExerciseCard({
           }
 
         </View>
-
 
       </View>
 
@@ -90,31 +106,61 @@ export default function ExerciseCard({
 
         ) : (
 
-
-          <Pressable
+          <View
             style={styles.successDoneButton}
           >
 
             <Ionicons
-
               name="checkmark-circle"
-
               size={24}
-
               color="currentColor"
-
               style={styles.successDoneIcon}
-
             />
 
-          </Pressable>
+          </View>
 
+        )
+      }
+
+      {
+        showActions && (
+
+          <View style={styles.actions}>
+
+            <Pressable
+              onPress={() => onEdit(index)}
+            >
+
+              <Ionicons
+                name="create-outline"
+                size={20}
+                color="white"
+              />
+
+            </Pressable>
+
+
+
+            <Pressable
+              onPress={() => onDelete(index)}
+            >
+
+              <Ionicons
+                name="trash-outline"
+                size={20}
+                color="red"
+              />
+
+            </Pressable>
+
+
+          </View>
 
         )
       }
 
 
-    </View>
+    </Pressable>
 
   );
 

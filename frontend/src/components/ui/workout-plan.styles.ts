@@ -149,6 +149,21 @@ export const workoutPlanStyles = StyleSheet.create({
         elevation: 2,
     },
 
+    actions: {
+        marginTop: 14,
+        flexDirection: "row",
+        alignItems: "center",
+
+        gap: 24,
+
+        padding: 8,
+        borderRadius: 12,
+
+        backgroundColor: "rgba(0,0,0,0.45)",
+
+        zIndex: 10,
+    },
+
     addButtonText: {
         color: '#09ff00ff',
     },
