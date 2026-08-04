@@ -28,7 +28,7 @@ const persistConfig = {
     key: "root",
     storage: AsyncStorage,
 
-    whitelist: ["blogs"]
+    whitelist: ["percent", "blogs"]
 };
 
 // persisted reducer

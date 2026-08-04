@@ -68,6 +68,7 @@ export default function Account() {
     const handleLogout = () => {
         dispatch(logout());
         setShowLogoutModal(false);
+        localStorage.clear()
     };
 
     console.log("PROFILE:", profile);

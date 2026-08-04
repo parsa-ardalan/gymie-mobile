@@ -1,16 +1,15 @@
 import { workoutPlanStyles as styles } from '@/components/ui/workout-plan.styles';
-import { addPercent } from '@/redux/percent/percentSlice';
-import { setWorkoutMoves } from '@/redux/workouts/workoutsSlice';
+import AddExerciseModal from '@/components/workouts/AddExerciseModal';
+import ExerciseCard from '@/components/workouts/ExerciseCard';
+import WorkoutProgress from '@/components/workouts/WorkoutProgress';
+import { setWorkoutMoves, toggleDoneLocal } from '@/redux/workouts/workoutsSlice';
 import { addExerciseToDay, getWorkouts, toggleExercise } from '@/services/workouts.service';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
-  Modal,
   Pressable,
   ScrollView,
-  Text,
-  TextInput,
   View
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,15 +19,10 @@ export default function Plan() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const dispatch = useDispatch();
 
+  const user = useSelector((state: any) => state.user)
   const workouts = useSelector((state: any) => state.workouts);
   const dayIndex = Number(slug);
   const workoutList = workouts.days?.[dayIndex]?.exercises || [];
-
-  // percent codes
-  const weekPercent = useSelector((state: any) => state.percent);
-  const dayPercent = weekPercent[slug];
-  const movePercent = workoutList.length > 0 ? 100 / workoutList.length : 0;
-
 
   // modal
   const [modalVisible, setModalVisible] = useState(false);
@@ -52,6 +46,14 @@ export default function Plan() {
         sets
       );
 
+      if (res.success) {
+        dispatch(
+          setWorkoutMoves(
+            res.data
+          )
+        );
+      }
+
       if (!res.success) {
         console.log(res.message);
         return;
@@ -63,10 +65,10 @@ export default function Plan() {
       setSetsInput('');
 
       //sync 
-      const updated = await getWorkouts();
+      const updated = await getWorkouts(user._id);
 
       if (updated.success && updated.data?.length) {
-        dispatch(setWorkoutMoves(updated.data[0]));
+        dispatch(setWorkoutMoves(updated.data));
       }
 
     } catch (err) {
@@ -76,14 +78,22 @@ export default function Plan() {
     }
   };
 
-  const checkMove = async (item: any, index: number) => {
+  const checkMove = async (index: number) => {
 
-    // request to backend
+    // 1) update local redux immediately
+    dispatch(toggleDoneLocal({
+      dayIndex,
+      exerciseIndex: index
+    }));
+
+
+    // 2) request to backend
     const res = await toggleExercise(
       workouts._id,
       dayIndex,
       index
     );
+
 
     if (!res.success) {
       console.log(res.message);
@@ -91,20 +101,12 @@ export default function Plan() {
     }
 
 
-    // add day percent
-    dispatch(addPercent({
-      dayIndex: parseInt(slug),
-      percentNumber: movePercent
-    }));
+    // 3) sync redux with backend response
+    dispatch(
+      setWorkoutMoves(res.data)
+    );
 
   };
-
-  useEffect(() => {
-    console.log(
-      "WORKOUT UPDATED:",
-      workouts.days?.[dayIndex]?.exercises
-    );
-  }, [workouts]);
 
 
   return (
@@ -114,83 +116,21 @@ export default function Plan() {
         <View style={styles.page}>
 
           {/* Progress */}
-          <View style={styles.percentBox}>
-            <Text style={styles.percentNumberText}>
-              {dayPercent.percentage}%
-            </Text>
-
-            <View style={styles.percentBarBackground}>
-              <View
-                style={[
-                  styles.percentBarFill,
-                  { width: `${dayPercent.percentage}%` },
-                ]}
-              />
-            </View>
-          </View>
+          <WorkoutProgress dayIndex={dayIndex} />
 
           {/* Exercises */}
-          {workoutList.map((item: any, index: number) => (
+          {
+            workoutList.map((item: any, index: number) => (
 
-            // move box
-            <View
-              key={`${item.exerciseId}-${index}`}
-              style={[
-                styles.movementCard,
-                item.isDone && styles.movementCardDone,
-              ]}
-            >
-              <Text style={styles.movementName}>
-                {item.exerciseId}
-              </Text>
+              <ExerciseCard
+                key={`${item.exerciseId}-${index}`}
+                item={item}
+                index={index}
+                onDone={checkMove}
+              />
 
-              <View style={styles.setRow}>
-                <Text style={styles.setCountText}>
-                  {item.sets.length} ست
-                </Text>
-
-                <View style={styles.setValuesWrapper}>
-                  {item.sets.map((set: number, i: number) => (
-                    <Text key={i} style={styles.setValueText}>
-                      {set}
-                    </Text>
-                  ))}
-                </View>
-              </View>
-
-              <>
-
-                {
-                  !item.isDone ? (
-
-                    <Pressable
-                      style={styles.doneButton}
-                      onPress={() => { checkMove(item, index) }}>
-                      <Text style={styles.doneButtonText}>
-                        اتمام حرکت
-                      </Text>
-                    </Pressable>
-
-                  ) : (
-
-                    <Pressable
-                      style={styles.successDoneButton}
-                    >
-                      <Ionicons
-                        name="checkmark-circle"
-                        size={24}
-                        color="currentColor"
-                        style={styles.successDoneIcon}
-                      />
-                    </Pressable>
-                  )
-                }
-
-              </>
-
-
-            </View>
-          ))}
+            ))
+          }
 
           {/* Add */}
           <Pressable
@@ -209,56 +149,16 @@ export default function Plan() {
       </ScrollView>
 
       {/* Modal */}
-      <Modal visible={modalVisible} transparent animationType="slide">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-
-            <Text style={styles.modalTitle}>
-              حرکت جدید
-            </Text>
-
-            <TextInput
-              placeholder="نام حرکت"
-              placeholderTextColor="#666"
-              value={exerciseName}
-              onChangeText={setExerciseName}
-              style={styles.input}
-            />
-
-            <TextInput
-              placeholder="12 10 8"
-              placeholderTextColor="#666"
-              value={setsInput}
-              onChangeText={setSetsInput}
-              style={styles.input}
-            />
-
-            <View style={styles.modalButtons}>
-
-              <Pressable
-                onPress={addNewMove}
-                style={styles.saveBtn}
-                disabled={loading}
-              >
-                <Text style={styles.saveText}>
-                  {loading ? '...' : 'تایید'}
-                </Text>
-              </Pressable>
-
-              <Pressable
-                onPress={() => { setModalVisible(false) }}
-                style={styles.cancelBtn}
-              >
-                <Text style={styles.cancelText}>
-                  انصراف
-                </Text>
-              </Pressable>
-
-            </View>
-
-          </View>
-        </View>
-      </Modal>
+      <AddExerciseModal
+        visible={modalVisible}
+        loading={loading}
+        exerciseName={exerciseName}
+        setsInput={setsInput}
+        setExerciseName={setExerciseName}
+        setSetsInput={setSetsInput}
+        onSave={addNewMove}
+        onClose={() => setModalVisible(false)}
+      />
 
     </>
 

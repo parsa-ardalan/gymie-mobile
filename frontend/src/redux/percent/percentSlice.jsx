@@ -39,10 +39,10 @@ const percentSlice = createSlice({
 
         addPercent: (state, action) => {
 
-            const dayItem = state.find(item => item.day == action.payload.dayIndex);
+            const dayItem = state.find(item => item.day == action.payload.day);
 
             if (dayItem) {
-                dayItem.percentage += action.payload.percentNumber;
+                dayItem.percentage = action.payload.percentNumber;
             }
 
         }
