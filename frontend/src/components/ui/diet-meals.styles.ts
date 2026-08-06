@@ -169,12 +169,12 @@ export const dietMealsStyles = StyleSheet.create({
         top: '50%',
         transform: [{ translateY: -18 }],
         flexDirection: 'row',
-        gap: 6,
+        gap: 0,
     },
 
     successButton: {
 
-        backgroundColor: "#00ca5415",
+        // backgroundColor: "#00ca5415",
         borderRadius: 8,
 
         paddingHorizontal: 10,
@@ -185,7 +185,7 @@ export const dietMealsStyles = StyleSheet.create({
 
     editButton: {
 
-        backgroundColor: "#ffffff15",
+        // backgroundColor: "#ffffff15",
         borderRadius: 8,
 
         paddingHorizontal: 10,
@@ -196,7 +196,7 @@ export const dietMealsStyles = StyleSheet.create({
 
     deleteButton: {
 
-        backgroundColor: "#ff555515",
+        // backgroundColor: "#ff555515",
 
         borderRadius: 8,
 

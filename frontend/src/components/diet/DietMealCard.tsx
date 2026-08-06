@@ -44,14 +44,9 @@ export default function DietMealCard({
 
 
     const [open, setOpen] = useState(false);
-
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
-
     const [editValue, setEditValue] = useState("");
-
     const [activeIngredient, setActiveIngredient] = useState<number | null>(null);
-
-
 
     const mealTitle =
         meal.mealName === "breakfast"
@@ -96,8 +91,6 @@ export default function DietMealCard({
 
     };
 
-
-
     // ✏️ شروع ویرایش
     const startEdit = (
         index: number,
@@ -111,8 +104,6 @@ export default function DietMealCard({
         setActiveIngredient(null);
 
     };
-
-
 
     // ✅ تایید ویرایش
     const confirmEdit = async (
@@ -156,8 +147,6 @@ export default function DietMealCard({
 
     };
 
-
-
     // 🗑 حذف ماده غذایی
     const handleRemoveIngredient = async (
         index: number
@@ -193,7 +182,6 @@ export default function DietMealCard({
         }
 
     };
-
 
 
     // باز و بسته کردن دکمه‌ها
@@ -336,7 +324,7 @@ export default function DietMealCard({
                                                                     onPress={() => startEdit(index, ingredient)}
                                                                 >
                                                                     <Ionicons
-                                                                        name="pencil-outline"
+                                                                        name="create-outline"
                                                                         size={18}
                                                                         color="currentColor"
                                                                         style={styles.editButtonIcon}
@@ -390,10 +378,7 @@ export default function DietMealCard({
 
                         </Pressable>
 
-
-
                     </View>
-
 
                 )
             }
