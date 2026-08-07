@@ -7,6 +7,7 @@ export type SleepingState = {
     user_id: string;
     bedTime: string;
     wakeTime: string;
+    suggestedHour: number;
     sleepDuration: number;
     createdAt: string;
     updatedAt: string;
@@ -20,6 +21,7 @@ const initialState: SleepingState = {
     user_id: "",
     bedTime: "",
     wakeTime: "",
+    suggestedHour: 7,
     sleepDuration: 0,
     createdAt: "",
     updatedAt: ""
@@ -49,6 +51,10 @@ const sleepingSlice = createSlice({
 
         },
 
+        changeSuggestedTime: (state, action) => {
+            state.suggestedHour = action.payload;
+        },
+
 
         updateSleeping: (state, action) => {
 
@@ -67,7 +73,8 @@ const sleepingSlice = createSlice({
 export const {
     changeBedTime,
     changeWakeTime,
-    updateSleeping
+    updateSleeping,
+    changeSuggestedTime
 
 } = sleepingSlice.actions;
 

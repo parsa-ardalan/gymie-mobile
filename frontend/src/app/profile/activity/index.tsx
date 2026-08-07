@@ -51,7 +51,10 @@ export default function Activity() {
     // Sleep
     // -------------------------
 
-    const offeredSleepingHour = 8
+    const sleepingData = useSelector((state: any) => state.sleeping)
+    const offeredSleepingHour = sleepingData.suggestedHour;
+
+    console.log(offeredSleepingHour)
 
     const userSleepHour =
         (sleepingSystem?.sleepDuration || 0) / 60;
