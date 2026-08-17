@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "Gymie",
+    "slug": "gymie-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "gymiemobile",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "bundleIdentifier": "com.fitshotech.gymie",
+      "icon": "./assets/images/icon.png"
+    },
+    "android": {
+      "package": "com.fitshotech.gymie",
+      "adaptiveIcon": {
+        "backgroundColor": "#000000",
+        "foregroundImage": "./assets/images/android-icon-foreground.png"
+      },
+      "predictiveBackGestureEnabled": true
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#000000",
+          "android": {
+            "image": "./assets/images/splash-icon.png",
+            "imageWidth": 76
+          }
+        }
+      ],
+      "@react-native-community/datetimepicker",
+      "expo-localization",
+      "expo-image",
+      "expo-web-browser"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "9f992b03-59e8-4a2a-8a69-c76e284e6b0e"
+      }
+    }
+  }
+}
