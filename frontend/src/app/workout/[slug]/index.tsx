@@ -81,7 +81,7 @@ export default function Plan() {
       }
 
       if (!res.success) {
-        console.log(res.message);
+        console.error(res.message);
         return;
       }
 
@@ -98,7 +98,7 @@ export default function Plan() {
       }
 
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -162,7 +162,7 @@ export default function Plan() {
 
       if (!res.success) {
 
-        console.log(res.message);
+        console.error(res.message);
         return;
 
       }
@@ -186,7 +186,7 @@ export default function Plan() {
 
     } catch (err) {
 
-      console.log(err);
+      console.error(err);
 
     } finally {
 
@@ -212,7 +212,7 @@ export default function Plan() {
 
       if (!res.success) {
 
-        console.log(res.message);
+        console.error(res.message);
         return;
 
       }
@@ -234,7 +234,7 @@ export default function Plan() {
 
     } catch (err) {
 
-      console.log(err);
+      console.error(err);
 
     } finally {
 
@@ -263,7 +263,7 @@ export default function Plan() {
     );
 
     if (!res.success) {
-      console.log(res.message);
+      console.error(res.message);
       return;
     }
 

@@ -57,6 +57,13 @@ export const en = {
             'Friday',
         ],
 
+        subtitle: "visit the diet",
+
+        boxTitle: "Using your physique info, I calculated your body needs which you make sure to put in your diet. ",
+        calorieTitle: "calorie",
+        proteinTitle: "protein",
+        carbohydratesTitle: "carbohydrates",
+
         mealPlan: 'Meal Plan',
         day: 'Day',
         notFound: 'Meal plan not found',

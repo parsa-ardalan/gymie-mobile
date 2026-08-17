@@ -91,7 +91,7 @@ export default function GetAPI() {
 
             } catch (error) {
 
-                console.log(
+                console.error(
                     "GET API ERROR:",
                     error
                 );

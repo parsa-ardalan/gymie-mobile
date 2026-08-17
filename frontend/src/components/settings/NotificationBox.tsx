@@ -36,7 +36,7 @@ export default function NotificationBox() {
             setEnabled(status === "granted");
 
         } catch (error) {
-            console.log(
+            console.error(
                 "Permission check error:",
                 error
             );
@@ -142,7 +142,7 @@ export default function NotificationBox() {
                 }
 
             } catch (error) {
-                console.log(
+                console.error(
                     "Permission request error:",
                     error
                 );
@@ -199,7 +199,7 @@ export default function NotificationBox() {
                 await requestPermission();
 
             } catch (error) {
-                console.log(
+                console.error(
                     "Notification press error:",
                     error
                 );

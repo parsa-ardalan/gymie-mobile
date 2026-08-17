@@ -82,7 +82,7 @@ export default function DietMealCard({
 
         } catch (error) {
 
-            console.log(
+            console.error(
                 "ADD INGREDIENT ERROR:",
                 error
             );
@@ -131,7 +131,7 @@ export default function DietMealCard({
 
         } catch (error) {
 
-            console.log(
+            console.error(
                 "UPDATE INGREDIENT ERROR:",
                 error
             );
@@ -171,7 +171,7 @@ export default function DietMealCard({
 
         } catch (error) {
 
-            console.log(
+            console.error(
                 "REMOVE INGREDIENT ERROR:",
                 error
             );

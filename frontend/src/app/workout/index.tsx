@@ -22,8 +22,6 @@ export default function Workout() {
     (state: any) => state.workouts
   );
 
-  console.log(workouts)
-
   if (!workouts._id) {
 
     return (

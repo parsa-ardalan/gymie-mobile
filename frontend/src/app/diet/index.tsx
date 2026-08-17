@@ -9,8 +9,13 @@ import {
 } from 'react-native';
 import { useSelector } from 'react-redux';
 
+import NutritionBox from "@/components/diet/NutritionBox";
 import WeekdaySkeleton from '@/components/skeletons/Weekday';
+
 import { translations } from '@/localization';
+import { useEffect, useState } from 'react';
+
+let nutritionModalShown = false;
 
 export default function Diet() {
 
@@ -20,67 +25,71 @@ export default function Diet() {
         (state: any) => state.diet
     );
 
-      if (!diet._id) {
-    
+    const [isModalVisible, setVisible] = useState(
+        !nutritionModalShown
+    );
+
+    useEffect(() => {
+        nutritionModalShown = true;
+    }, []);
+
+    if (!diet._id) {
         return (
-          <WeekdaySkeleton />
-        )
-      }
+            <WeekdaySkeleton />
+        );
+    }
 
     const daysName = translations.diet.days;
 
+
     return (
 
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView
+            contentContainerStyle={styles.page}
+            showsVerticalScrollIndicator={false}
+        >
 
-            <View style={styles.page}>
+            <NutritionBox visible={isModalVisible} onClose={() => { setVisible(false) }} />
 
-                {diet.days?.map((day: any) => (
+            {diet.days?.map((day: any) => (
 
-                    <Pressable
-                        key={day.dayOfWeek}
-                        style={styles.card}
-                        onPress={() =>
-                            router.push({
+                <Pressable
+                    key={day.dayOfWeek}
+                    style={styles.card}
+                    onPress={() =>
+                        router.push({
+                            pathname: '/diet/[slug]',
+                            params: {
+                                slug: String(day.dayOfWeek)
+                            },
+                        })
+                    }
+                >
 
-                                pathname: '/diet/[slug]',
+                    <View style={styles.cardContent}>
 
-                                params: {
-                                    slug: String(day.dayOfWeek)
-                                },
+                        <View style={styles.iconContainer}>
 
-                            })
-                        }
-
-                    >
-
-                        <View style={styles.cardContent}>
-
-                            <View style={styles.iconContainer}>
-
-                                <Image
-                                    source={require('@/assets/icons/diet.png')}
-                                    style={styles.icon}
-                                />
-
-                            </View>
-
-                            <View style={styles.titleContainer}>
-
-                                <Text style={styles.title}>
-                                    {daysName[day.dayOfWeek]}
-                                </Text>
-
-                            </View>
+                            <Image
+                                source={require('@/assets/icons/diet.png')}
+                                style={styles.icon}
+                            />
 
                         </View>
 
-                    </Pressable>
+                        <View style={styles.titleContainer}>
 
-                ))}
+                            <Text style={styles.title}>
+                                {daysName[day.dayOfWeek]}
+                            </Text>
 
-            </View>
+                        </View>
 
-        </ScrollView> 
+                    </View>
+
+                </Pressable>
+            ))}
+
+        </ScrollView>
     );
 }

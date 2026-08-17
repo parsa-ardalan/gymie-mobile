@@ -28,7 +28,7 @@ export default function Blogs() {
             setBlogs(res.data);
             dispatch(updateBlogs(res.data))
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     };
 

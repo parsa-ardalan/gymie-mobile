@@ -168,6 +168,7 @@ export const fa = {
     },
 
     diet: {
+
         days: [
             'شنبه',
             'یکشنبه',
@@ -177,6 +178,13 @@ export const fa = {
             'پنجشنبه',
             'جمعه',
         ],
+
+        subtitle: "مشاهده برنامه غذایی",
+
+        boxTitle: " با توجه به مشخصات بدنیت این مقادیر رو محاسبه کردم تا توی رژیمت قرار بدی.",
+        calorieTitle: "کالری",
+        proteinTitle: "پروتئین",
+        carbohydratesTitle: "کربوهیدرات",
 
         mealPlan: 'برنامه غذایی',
         day: 'روز',

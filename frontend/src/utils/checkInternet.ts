@@ -9,7 +9,7 @@ export const checkInternet = async (): Promise<boolean> => {
 
     } catch (error) {
 
-        console.log('Internet check error:', error);
+        console.error('Internet check error:', error);
 
         return false;
     }

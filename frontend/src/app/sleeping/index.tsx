@@ -222,7 +222,7 @@ export default function Sleeping() {
 
         if (!result.success) {
 
-            console.log(
+            console.error(
                 "PATCH bedTime error:",
                 result.message
             );
@@ -260,7 +260,7 @@ export default function Sleeping() {
 
         if (!result.success) {
 
-            console.log(
+            console.error(
                 "PATCH wakeTime error:",
                 result.message
             );

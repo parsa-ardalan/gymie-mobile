@@ -33,9 +33,7 @@ export default function Activity() {
     const height = profile?.height || 0;
     const weight = profile?.weight || 0;
 
-    const bmi = height > 0
-        ? weight / Math.pow(height / 100, 2)
-        : 0;
+    const bmi = height > 0 ? weight / Math.pow(height / 100, 2) : 0;
 
     const bodyForm =
         bmi === 0

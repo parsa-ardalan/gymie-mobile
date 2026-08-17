@@ -21,7 +21,7 @@ export default function Account() {
     const profile = useSelector((state: any) => state.user);
 
     if (!profile?._id) {
-        console.log("User id not found", profile);
+        console.error("User id not found", profile);
     }
 
     const dispatch = useDispatch();
@@ -58,7 +58,7 @@ export default function Account() {
 
         } catch (error) {
 
-            console.log(
+            console.error(
                 "Update profile failed:",
                 error
             );
