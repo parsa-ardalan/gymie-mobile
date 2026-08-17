@@ -22,7 +22,6 @@ type ActivityItem = {
 export default function HomePage() {
 
   const router = useRouter();
-
   const welcomeText = translations.home.welcomeMessages;
 
   const highlights: HighlightItem[] = [
