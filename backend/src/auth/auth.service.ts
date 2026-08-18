@@ -54,7 +54,7 @@ export class AuthService {
         //         10000 + Math.random() * 90000
         //     );
 
-        const otp = 11111
+        const otp = 12345
 
 
         console.log("LOGIN OTP:", otp);
@@ -100,10 +100,12 @@ export class AuthService {
 
 
 
-        const otp =
-            Math.floor(
-                10000 + Math.random() * 90000
-            );
+        // const otp =
+        //     Math.floor(
+        //         10000 + Math.random() * 90000
+        //     );
+
+        const otp = 12345
 
 
         console.log(
