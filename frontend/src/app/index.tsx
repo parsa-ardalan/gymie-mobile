@@ -4,6 +4,7 @@ import GetAPI from "@/utils/GetAPI";
 import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
 import { Image, Pressable, ScrollView, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
 
 type HighlightItem = {
   id: number;
@@ -74,6 +75,8 @@ export default function HomePage() {
   const handleNavigate = (path: string) => {
     router.push(path as any);
   };
+
+  console.log(useSelector((state: any) => state.user))
 
   return (
     <>

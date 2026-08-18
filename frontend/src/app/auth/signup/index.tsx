@@ -253,6 +253,8 @@ export default function SignUp() {
                     return;
                 }
 
+                // console.log("SERVER OTP:", result.otp);
+
                 /*
                  * Keep server OTP because
                  * the current API returns it.
@@ -495,7 +497,9 @@ export default function SignUp() {
          * Go back to phone step
          */
         setStep(3);
+
     };
+
 
     return (
 

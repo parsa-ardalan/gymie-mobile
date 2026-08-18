@@ -56,10 +56,6 @@ export class AuthService {
 
         const otp = 12345
 
-
-        console.log("LOGIN OTP:", otp);
-
-
         return {
 
             exists: true,
@@ -106,13 +102,6 @@ export class AuthService {
         //     );
 
         const otp = 12345
-
-
-        console.log(
-            "SIGNUP OTP:",
-            otp
-        );
-
 
 
         this.signupOtps.set(

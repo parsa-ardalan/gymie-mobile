@@ -37,11 +37,11 @@ export class User {
     @Prop()
     sleeping_id: string; //s1
 
-    @Prop()
-    isPremium: boolean //false
+    @Prop({ default: false })
+    isPremium: boolean;
 
-    @Prop()
-    premiumExpiresAt: Date | null
+    @Prop({ type: Date, default: null })
+    premiumExpiresAt: Date | null;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
