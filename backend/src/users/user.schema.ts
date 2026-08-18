@@ -39,6 +39,9 @@ export class User {
 
     @Prop()
     isPremium: boolean //false
+
+    @Prop()
+    premiumExpiresAt: Date | null
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -18,11 +18,8 @@ export class UsersService {
     async create(userData: any) {
 
         const userId = await this.counterService.getNextId("users", "u");
-
         const workoutId = await this.counterService.getNextId("workouts", "w");
-
         const dietId = await this.counterService.getNextId("diet", "d");
-
         const sleepingId = await this.counterService.getNextId("sleeping", "s"); // ✅ اضافه شده
 
         const newUser = new this.userModel({
@@ -30,8 +27,9 @@ export class UsersService {
             ...userData,
             workout_id: workoutId,
             diet_id: dietId,
-            sleeping_id: sleepingId, // ✅ اضافه شده
+            sleeping_id: sleepingId,
             isPremium: false,
+            premiumExpiresAt: null,
             createdAt: new Date()
         });
 
@@ -45,7 +43,25 @@ export class UsersService {
 
     // FIND USER BY PHONE
     async findByPhone(phoneNumber: string) {
-        return this.userModel.findOne({ phoneNumber });
+
+        const user = await this.userModel.findOne({ phoneNumber });
+
+        if (!user) {
+            return null;
+        }
+
+        if (
+            user.isPremium &&
+            user.premiumExpiresAt &&
+            user.premiumExpiresAt <= new Date()
+        ) {
+            user.isPremium = false;
+            user.premiumExpiresAt = null;
+
+            await user.save();
+        }
+
+        return user;
     }
 
     // UPDATE
